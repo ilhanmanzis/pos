@@ -1,28 +1,10 @@
-# 💸 Sistem Keuangan Rental PS
-
-Sistem Keuangan Rental PS adalah aplikasi web berbasis Laravel 11 yang dibuat untuk membantu mengelola transaksi keuangan harian dari rental PlayStation. Aplikasi ini dirancang dengan antarmuka modern menggunakan Tailwind CSS dan template TailAdmin, agar mudah digunakan oleh pemilik usaha rental.
-
-## 🚀 Fitur Utama
-
--   📅 Pencatatan transaksi harian (pemasukan & pengeluaran)
--   💰 Rekapitulasi keuangan bulanan
--   📊 Dashboard statistik keuangan
--   🔍 Filter dan pencarian transaksi
--   👥 Manajemen pengguna dan otorisasi akses
-
-## 🛠️ Teknologi yang Digunakan
-
--   [Laravel 11](https://laravel.com/) – Backend framework PHP
--   [Tailwind CSS](https://tailwindcss.com/) – CSS Utility-first
--   [TailAdmin Template](https://tailadmin.com/) – Template dashboard admin modern berbasis Tailwind
-
 ## ⚙️ Cara Install & Menjalankan Aplikasi
 
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/ilhanmanzis/sistem-keuangan-rental-ps.git
-cd sistem-keuangan-rental-ps
+git clone https://github.com/ilhanmanzis/pos.git
+cd pos
 
 ```
 
@@ -63,8 +45,12 @@ php artisan migrate --seed
 php artisan serve
 ```
 
-## 📸 Screenshot
+### 6. link storage
 
-![Dashboard](screenshots/dashboard.png)
-![Pemasukan](screenshots/pemasukan.png)
-![Pengeluaran](screenshots/pengeluaran.png)
+```
+php artisan storage:link
+```
+
+## ERD
+
+![ERD](screenshots/gudang.jpg)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Kategori;
 use App\Http\Controllers\KategoriPengeluaran;
 use App\Http\Controllers\ManajemenUser;
 use App\Http\Controllers\Pelanggan;
+use App\Http\Controllers\Pengeluaran;
 use App\Http\Controllers\Produk;
 use App\Http\Controllers\Profile;
 use App\Http\Controllers\Retur;
@@ -51,6 +52,14 @@ Route::middleware(['auth', 'role:finance'])->prefix('finance')->as('finance.')->
     Route::get('/kategori/{id}', [KategoriPengeluaran::class, 'show'])->name('kategori.show');
     Route::put('/kategori/update/{id}', [KategoriPengeluaran::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/store/{id}', [KategoriPengeluaran::class, 'destroy'])->name('kategori.delete');
+
+    //Pengeluaran
+    Route::get('/pengeluaran', [Pengeluaran::class, 'index'])->name('pengeluaran');
+    Route::get('/pengeluaran/create', [Pengeluaran::class, 'create'])->name('pengeluaran.create');
+    Route::post('/pengeluaran/store', [Pengeluaran::class, 'store'])->name('pengeluaran.store');
+    Route::get('/pengeluaran/{id}', [Pengeluaran::class, 'show'])->name('pengeluaran.show');
+    Route::put('/pengeluaran/update/{id}', [Pengeluaran::class, 'update'])->name('pengeluaran.update');
+    Route::delete('/pengeluaran/store/{id}', [Pengeluaran::class, 'destroy'])->name('pengeluaran.delete');
 });
 
 //gudang

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->bigIncrements('id_pengeluaran');
             $table->unsignedBigInteger('id_user');
             $table->unsignedBigInteger('id_kategori_pengeluaran');
-            $table->text('keterangan');
+            $table->text('keterangan')->nullable();
             $table->bigInteger('harga');
-            $table->date('tanggal');
+            $table->date('tanggal')->nullable();
             $table->timestamps();
 
             $table->foreign('id_kategori_pengeluaran')->references('id_kategori_pengeluaran')->on('kategori_pengeluaran')->onDelete('cascade');

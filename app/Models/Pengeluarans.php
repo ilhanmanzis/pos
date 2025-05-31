@@ -11,7 +11,7 @@ class Pengeluarans extends Model
     use HasFactory;
     protected $table = 'pengeluarans';
     protected $primaryKey = 'id_pengeluaran';
-    protected $fillable = ['id_user', 'id_kategori_pengeluaran', 'keterangan', 'harga'];
+    protected $fillable = ['id_user', 'id_kategori_pengeluaran', 'keterangan', 'harga', 'tanggal'];
 
     public function kategori(): BelongsTo
     {

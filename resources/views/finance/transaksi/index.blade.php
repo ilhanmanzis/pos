@@ -7,7 +7,7 @@
     <main>
         <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
             <!-- Breadcrumb Start -->
-            <div x-data="{ pageName: `Pengeluaran` }">
+            <div x-data="{ pageName: `Transaksi` }">
                 <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
                     <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90" x-text="pageName"></h2>
                     @if (session('success'))
@@ -41,11 +41,11 @@
                 <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                     <div class="px-5 py-4 sm:px-6 sm:py-5">
                         <div class="flex items-center justify-between gap-5">
-                            <a href="{{ route('finance.pengeluaran.create') }}"
+                            <a href="{{ route('finance.transaksi.create') }}"
                                 class="inline-flex items-center gap-2 px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 mb-5">
-                                Tambah Pengeluaran
+                                Tambah Transaksi
                             </a>
-                            <form action="{{ route('finance.pengeluaran') }}" method="get">
+                            <form action="{{ route('finance.transaksi') }}" method="get">
                                 <div class="flex justify-between mb-2">
 
                                     <div class="relative">
@@ -57,8 +57,8 @@
                                                     fill="" />
                                             </svg>
                                         </span>
-                                        <input type="text" placeholder="cari pengeluaran..." id="search-input"
-                                            name="pengeluaran" value="{{ request('pengeluaran') }}"
+                                        <input type="text" placeholder="cari transaksi..." id="search-input"
+                                            name="transaksi" value="{{ request('transaksi') }}"
                                             class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pr-14 pl-12 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden xl:w-[400px] dark:border-gray-800 dark:bg-gray-900 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30" />
 
                                         <button id="search-button"
@@ -96,6 +96,22 @@
                                                         <div class="flex items-center">
                                                             <p
                                                                 class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
+                                                                Faktur
+                                                            </p>
+                                                        </div>
+                                                    </th>
+                                                    <th class="px-5 py-3 sm:px-6">
+                                                        <div class="flex items-center">
+                                                            <p
+                                                                class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
+                                                                Pelanggan
+                                                            </p>
+                                                        </div>
+                                                    </th>
+                                                    <th class="px-5 py-3 sm:px-6">
+                                                        <div class="flex items-center">
+                                                            <p
+                                                                class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
                                                                 Tanggal
                                                             </p>
                                                         </div>
@@ -104,7 +120,7 @@
                                                         <div class="flex items-center">
                                                             <p
                                                                 class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
-                                                                Kategori
+                                                                Total
                                                             </p>
                                                         </div>
                                                     </th>
@@ -112,7 +128,7 @@
                                                         <div class="flex items-center">
                                                             <p
                                                                 class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
-                                                                Keterangan
+                                                                Jenis
                                                             </p>
                                                         </div>
                                                     </th>
@@ -120,7 +136,7 @@
                                                         <div class="flex items-center">
                                                             <p
                                                                 class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
-                                                                Harga
+                                                                Status
                                                             </p>
                                                         </div>
                                                     </th>
@@ -141,7 +157,7 @@
                                             @endphp
                                             <!-- table body start -->
                                             <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
-                                                @foreach ($pengeluarans as $pengeluaran)
+                                                @foreach ($transaksis as $transaksi)
                                                     <tr>
                                                         <td class="px-5 py-4 sm:px-6">
                                                             <div class="flex items-center">
@@ -161,7 +177,7 @@
                                                                 <div class="flex -space-x-2">
                                                                     <p
                                                                         class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                                                        {{ $pengeluaran->tanggal }}
+                                                                        {{ $transaksi->kode_faktur }}
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -171,7 +187,7 @@
                                                                 <div class="flex -space-x-2">
                                                                     <p
                                                                         class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                                                        {{ $pengeluaran->kategori->name }}
+                                                                        {{ $transaksi->pelanggan->name }}
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -181,7 +197,7 @@
                                                                 <div class="flex -space-x-2">
                                                                     <p
                                                                         class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                                                        {{ $pengeluaran->keterangan }}
+                                                                        {{ $transaksi->tanggal }}
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -191,7 +207,27 @@
                                                                 <div class="flex -space-x-2">
                                                                     <p
                                                                         class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                                                        {{ $pengeluaran->harga }}
+                                                                        {{ $transaksi->total_harga }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-5 py-4 sm:px-6">
+                                                            <div class="flex items-center">
+                                                                <div class="flex -space-x-2">
+                                                                    <p
+                                                                        class="text-gray-500 text-theme-sm dark:text-gray-400">
+                                                                        {{ $transaksi->jenis }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="px-5 py-4 sm:px-6">
+                                                            <div class="flex items-center">
+                                                                <div class="flex -space-x-2">
+                                                                    <p
+                                                                        class="text-gray-500 text-theme-sm dark:text-gray-400">
+                                                                        {{ $transaksi->status }}
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -201,7 +237,7 @@
                                                             <div class="flex items-center">
 
                                                                 <form
-                                                                    action="{{ route('finance.pengeluaran.delete', ['id' => $pengeluaran['id_pengeluaran']]) }}"
+                                                                    action="{{ route('finance.transaksi.delete', ['id' => $transaksi['id_transaksi']]) }}"
                                                                     onsubmit="return confirm('Apakah anda yakin ingin menghapus data?')"
                                                                     method="post">
                                                                     @csrf
@@ -222,7 +258,7 @@
                                                                     </button>
                                                                 </form>
 
-                                                                <a href="{{ route('finance.pengeluaran.show', ['id' => $pengeluaran['id_pengeluaran']]) }}"
+                                                                <a href="{{ route('finance.transaksi.show', ['id' => $transaksi['id_transaksi']]) }}"
                                                                     class="inline-flex items-center gap-2 rounded-lg bg-success-500 px-2 py-1.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-success-600 mx-3">
                                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                                         fill="none" viewBox="0 0 24 24"
@@ -245,7 +281,7 @@
                                         </table>
                                         <!-- Pagination links -->
                                         <div class="border-t border-gray-100 dark:border-gray-800 p-4">
-                                            {{ $pengeluarans->links() }}
+                                            {{ $transaksis->links() }}
                                         </div>
                                     </div>
                                 </div>

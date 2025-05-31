@@ -24,7 +24,7 @@ class ProfileFactory extends Factory
             'no_hp' => '08867567567',
             'email' => 'janggarfals1207@gmail.com',
             'ppn' => 10,
-            'nsfp' => '0001.23'
+            'nsfp' => '010.002-22.12345678'
         ];
     }
 }

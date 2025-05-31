@@ -35,4 +35,16 @@ class Transaksis extends Model
     {
         return $this->hasOne(SuratJalan::class, 'kode_faktur', 'kode_faktur');
     }
+
+    public function scopeFilter($query, $filters)
+    {
+        if (!empty($filters['transaksi'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('kode_faktur', 'like', '%' . $filters['transaksi'] . '%')
+                    ->orWhereHas('pelanggan', function ($q2) use ($filters) {
+                        $q2->where('name', 'like', '%' . $filters['transaksi'] . '%');
+                    });
+            });
+        }
+    }
 }

@@ -65,7 +65,6 @@ class Profile extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
-            'nsfp' => 'required|string|max:255',
             'ppn' => 'required|integer',
             'no_hp' => 'required|string|max:255',
             'alamat' => 'required|string',
@@ -75,7 +74,6 @@ class Profile extends Controller
             'email.required' => 'Email tidak boleh kosong',
             'no_hp.required' => 'Nomor Telepon tidak boleh kosong',
             'ppn.required' => 'PPN tidak boleh kosong',
-            'nsfp.required' => 'NSFP tidak boleh kosong',
             'alamat.required' => 'Alamat tidak boleh kosong',
             'logo.image' => 'logo harus berupa gambar',
             'logo.mimes' => 'logo harus berformat png, jpg, jpeg, atau webp',
@@ -91,7 +89,7 @@ class Profile extends Controller
         $profile->no_hp = $validated['no_hp'];
         $profile->email = $validated['email'];
         $profile->ppn = $validated['ppn'];
-        $profile->nsfp = $validated['nsfp'];
+        $profile->nsfp = $validated['nsfp'] ?? '';
 
 
         // Proses logo jika ada

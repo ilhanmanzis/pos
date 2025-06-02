@@ -4,6 +4,17 @@
     <x-slot:title>{{ $title }}</x-slot:title>
     {{-- start main --}}
 
+    @php
+        $openInvoiceUrl = session()->pull('open_invoice_url'); // ambil dan hapus session
+    @endphp
+
+    @if ($openInvoiceUrl)
+        <script>
+            window.open("{{ $openInvoiceUrl }}", "_blank");
+        </script>
+    @endif
+
+
     <main>
         <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
             <!-- Breadcrumb Start -->
@@ -124,14 +135,7 @@
                                                             </p>
                                                         </div>
                                                     </th>
-                                                    <th class="px-5 py-3 sm:px-6">
-                                                        <div class="flex items-center">
-                                                            <p
-                                                                class="font-medium text-gray-500 text-theme-xs dark:text-gray-400">
-                                                                Jenis
-                                                            </p>
-                                                        </div>
-                                                    </th>
+
                                                     <th class="px-5 py-3 sm:px-6">
                                                         <div class="flex items-center">
                                                             <p
@@ -207,21 +211,13 @@
                                                                 <div class="flex -space-x-2">
                                                                     <p
                                                                         class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                                                        {{ $transaksi->total_harga }}
+
+                                                                        {{ 'Rp ' . number_format($transaksi->total_harga, 0, ',', '.') }}
                                                                     </p>
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td class="px-5 py-4 sm:px-6">
-                                                            <div class="flex items-center">
-                                                                <div class="flex -space-x-2">
-                                                                    <p
-                                                                        class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                                                        {{ $transaksi->jenis }}
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                         <td class="px-5 py-4 sm:px-6">
                                                             <div class="flex items-center">
                                                                 <div class="flex -space-x-2">
@@ -236,7 +232,7 @@
                                                         <td class="px-5 py-4 sm:px-6">
                                                             <div class="flex items-center">
 
-                                                                <form
+                                                                {{-- <form
                                                                     action="{{ route('finance.transaksi.delete', ['id' => $transaksi['id_transaksi']]) }}"
                                                                     onsubmit="return confirm('Apakah anda yakin ingin menghapus data?')"
                                                                     method="post">
@@ -256,9 +252,9 @@
 
 
                                                                     </button>
-                                                                </form>
+                                                                </form> --}}
 
-                                                                <a href="{{ route('finance.transaksi.show', ['id' => $transaksi['id_transaksi']]) }}"
+                                                                {{-- <a href="{{ route('finance.transaksi.show', ['id' => $transaksi['id_transaksi']]) }}"
                                                                     class="inline-flex items-center gap-2 rounded-lg bg-success-500 px-2 py-1.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-success-600 mx-3">
                                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                                         fill="none" viewBox="0 0 24 24"
@@ -269,7 +265,75 @@
                                                                             d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                                                     </svg>
 
+                                                                </a> --}}
+                                                                <a href="{{ route('finance.transaksi.invoice', ['id' => $transaksi['id_transaksi']]) }}"
+                                                                    target="blank"
+                                                                    class="inline-flex items-center gap-2 rounded-lg bg-success-500 px-2 py-1.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-success-600">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        fill="none" viewBox="0 0 24 24"
+                                                                        stroke-width="1.5" stroke="currentColor"
+                                                                        class="size-6">
+                                                                        <path stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
+                                                                    </svg>
+
+
+
                                                                 </a>
+                                                                <a href="{{ route('finance.transaksi.detail', ['id' => $transaksi['id_transaksi']]) }}"
+                                                                    class="inline-flex items-center gap-2 rounded-lg bg-warning-500 px-2 py-1.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-warning-600 mx-3">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                                        viewBox="0 0 24 24" fill="currentColor"
+                                                                        class="size-6">
+                                                                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                                                        <path fill-rule="evenodd"
+                                                                            d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
+                                                                            clip-rule="evenodd" />
+                                                                    </svg>
+
+
+                                                                </a>
+                                                                <div x-data="{ openDropDown: false }" class="relative h-fit">
+                                                                    <button @click="openDropDown = !openDropDown"
+                                                                        :class="openDropDown ? 'text-gray-700 dark:text-white' :
+                                                                            'text-gray-400 hover:text-gray-700 dark:hover:text-white'">
+                                                                        <svg class="fill-current" width="24"
+                                                                            height="24" viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg">
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M10.2441 6C10.2441 5.0335 11.0276 4.25 11.9941 4.25H12.0041C12.9706 4.25 13.7541 5.0335 13.7541 6C13.7541 6.9665 12.9706 7.75 12.0041 7.75H11.9941C11.0276 7.75 10.2441 6.9665 10.2441 6ZM10.2441 18C10.2441 17.0335 11.0276 16.25 11.9941 16.25H12.0041C12.9706 16.25 13.7541 17.0335 13.7541 18C13.7541 18.9665 12.9706 19.75 12.0041 19.75H11.9941C11.0276 19.75 10.2441 18.9665 10.2441 18ZM11.9941 10.25C11.0276 10.25 10.2441 11.0335 10.2441 12C10.2441 12.9665 11.0276 13.75 11.9941 13.75H12.0041C12.9706 13.75 13.7541 12.9665 13.7541 12C13.7541 11.0335 12.9706 10.25 12.0041 10.25H11.9941Z"
+                                                                                fill="" />
+                                                                        </svg>
+                                                                    </button>
+
+                                                                    <div x-show="openDropDown"
+                                                                        @click.outside="openDropDown = false"
+                                                                        class="absolute right-0 z-40 w-40 p-2 space-y-1 bg-white border border-gray-200 top-full rounded-2xl shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark">
+                                                                        {{-- <a href="{{ route('gudang.produk.detail', ['id' => $produk['id_produk']]) }}"
+                                                                            class="flex w-full px-3 py-2 font-medium text-left text-gray-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300">
+                                                                            Lihat Detail
+                                                                        </a> --}}
+
+
+                                                                        <form
+                                                                            action="{{ route('finance.transaksi.delete', ['id' => $transaksi['id_transaksi']]) }}"
+                                                                            onsubmit="return confirm('Apakah anda yakin ingin menghapus data?')"
+                                                                            method="post">
+                                                                            @csrf
+                                                                            @method('delete')
+
+                                                                            <button type="submit"
+                                                                                class="flex w-full px-3 py-2 font-medium text-left text-error-500 rounded-lg text-theme-xs hover:bg-gray-100 hover:text-error-700 dark:text-error-400 dark:hover:bg-white/5 dark:hover:text-error-300">
+                                                                                Delete
+
+
+                                                                            </button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </td>
 

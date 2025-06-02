@@ -14,7 +14,7 @@ class Transaksis extends Model
     use HasFactory;
     protected $table = 'transaksis';
     protected $primaryKey = 'id_transaksi';
-    protected $fillable = ['kode_pelanggan', 'kode_faktur', 'kode_invoice', 'id_user', 'tanggal', 'total_harga', 'jenis'];
+    protected $fillable = ['kode_pelanggan', 'kode_faktur', 'kode_invoice', 'id_user', 'tanggal', 'total_harga', 'jenis', 'status'];
 
     public function pelanggan(): BelongsTo
     {

@@ -13,6 +13,7 @@
 
     @vite(['resources/css/style.css', 'resources/js/app.js'])
 
+    {{-- <link rel="stylesheet" href="{{ asset('build/assets/style-CsRbuFNF.css') }}"> --}}
     <link rel="stylesheet" href="{{ url('/') }}/css/style.css">
 
     <style>

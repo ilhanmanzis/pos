@@ -11,7 +11,7 @@ class TransaksiDetail extends Model
     use HasFactory;
     protected $table = 'transaksi_detail';
     protected $primaryKey = 'id_detail';
-    protected $fillable = ['id_transaksi', 'id_stok', 'status', 'qty', 'harga_jual', 'sub_total'];
+    protected $fillable = ['id_transaksi', 'id_stok', 'satuan', 'status', 'qty', 'harga_jual', 'sub_total'];
 
     public function transaksi(): BelongsTo
     {

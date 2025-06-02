@@ -191,7 +191,7 @@
                                                                 <div class="flex -space-x-2">
                                                                     <p
                                                                         class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                                                        {{ $pengeluaran->harga }}
+                                                                        {{ 'Rp ' . number_format($pengeluaran->harga, 0, ',', '.') }}
                                                                     </p>
                                                                 </div>
                                                             </div>

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('no_hp');
             $table->string('email');
             $table->integer('ppn');
-            $table->string('nsfp');
+            $table->string('nsfp')->nullable();
             $table->timestamps();
         });
     }

@@ -18,13 +18,13 @@ class ProfileFactory extends Factory
     {
         return [
             'id_profile' => 1,
-            'name' => 'PT. Janggar Fals',
+            'name' => 'PT. Barokah Sukses Abadi Group',
             'logo' => 'profile.png',
             'alamat' => 'Kota Yogyakarta, Daerah Istimewa Yogyakarta',
             'no_hp' => '08867567567',
-            'email' => 'janggarfals1207@gmail.com',
+            'email' => 'admin@gmail.com',
             'ppn' => 10,
-            'nsfp' => '010.002-22.12345678'
+            'nsfp' => null
         ];
     }
 }

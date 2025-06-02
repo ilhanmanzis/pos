@@ -15,9 +15,9 @@ class Pengeluaran extends Controller
     public function index()
     {
         $data = [
-            'selected' =>  'Data Pengeluaran',
-            'page' => 'Data Pengeluaran',
-            'title' => 'Data Pengeluaran',
+            'selected' =>  'Pengeluaran',
+            'page' => 'Pengeluaran',
+            'title' => 'Pengeluaran',
             'pengeluarans' => Pengeluarans::with(['kategori'])->filter(request()->only(['pengeluaran']))->orderBy('updated_at', 'desc')->paginate(10)->withQueryString()
         ];
 
@@ -30,8 +30,8 @@ class Pengeluaran extends Controller
     public function create()
     {
         $data = [
-            'selected' =>  'Data Pengeluaran',
-            'page' => 'Data Pengeluaran',
+            'selected' =>  'Pengeluaran',
+            'page' => 'Pengeluaran',
             'title' => 'Tambah Data Pengeluaran',
             'kategoris' => KategoriPengeluaran::all()
         ];
@@ -70,8 +70,8 @@ class Pengeluaran extends Controller
     public function show(string $id)
     {
         $data = [
-            'selected' =>  'Data Pengeluaran',
-            'page' => 'Data Pengeluaran',
+            'selected' =>  'Pengeluaran',
+            'page' => 'Pengeluaran',
             'title' => 'Edit Data Pengeluaran',
             'kategoris' => KategoriPengeluaran::all(),
             'pengeluaran' => Pengeluarans::with(['kategori'])->find($id)

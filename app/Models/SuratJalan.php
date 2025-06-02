@@ -11,7 +11,7 @@ class SuratJalan extends Model
     use HasFactory;
     protected $table = 'surat_jalan';
     protected $primaryKey = 'id_surat_jalan';
-    protected $fillable = ['kode_faktur', 'id_user', 'tanggal_pengiriman', 'status'];
+    protected $fillable = ['kode_faktur', 'id_user', 'tanggal_pengiriman', 'status', 'jam'];
 
     public function transaksi(): BelongsTo
     {

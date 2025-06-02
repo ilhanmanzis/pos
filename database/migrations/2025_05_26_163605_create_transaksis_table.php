@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('kode_pelanggan');
             $table->string('kode_faktur')->unique();
             $table->date('tanggal');
-            $table->bigInteger('total_harga');
             $table->enum('jenis', ['biasa', 'sample']);
+            $table->enum('status', ['lunas', 'belum bayar']);
+            $table->bigInteger('total_harga');
             $table->unsignedBigInteger('id_user');
             $table->timestamps();
 

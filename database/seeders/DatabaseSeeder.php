@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 
 use App\Models\Kategoris;
+use App\Models\Pelanggans;
 use App\Models\Profile;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -45,5 +46,34 @@ class DatabaseSeeder extends Seeder
         ]);
         Profile::factory()->create();
         Kategoris::factory()->create();
+
+        $pelanggans = [
+            [
+                'kode_pelanggan' => '00001',
+                'name' => 'Rs. Akbar',
+                'no_hp' => '087865467576',
+                'email' => 'akbar@gmail.com',
+                'alamat' => 'Jl. Tegal Asri Rt 01, Rw 01',
+                'desa' => 'Tamanan',
+                'kecamatan' => 'Banguntapan',
+                'kabupaten' => 'Bantul',
+                'provinsi' => 'Daerah Istimewa Yogyakarta'
+            ],
+            [
+                'kode_pelanggan' => '00002',
+                'name' => 'Rs. Kardinah',
+                'no_hp' => '087865467576',
+                'email' => 'admin@gmail.com',
+                'alamat' => 'Jl. Tegal Asri Rt 01, Rw 01',
+                'desa' => 'Tamanan',
+                'kecamatan' => 'Banguntapan',
+                'kabupaten' => 'Bantul',
+                'provinsi' => 'Daerah Istimewa Yogyakarta'
+            ],
+        ];
+
+        foreach ($pelanggans as $pelanggan) {
+            Pelanggans::factory()->create($pelanggan);
+        }
     }
 }

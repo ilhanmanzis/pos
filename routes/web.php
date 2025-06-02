@@ -1,15 +1,18 @@
 <?php
 
 use App\Http\Controllers\Auth;
+use App\Http\Controllers\BarangDiterima;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Kategori;
 use App\Http\Controllers\KategoriPengeluaran;
 use App\Http\Controllers\ManajemenUser;
 use App\Http\Controllers\Pelanggan;
+use App\Http\Controllers\Penagihan;
 use App\Http\Controllers\Pengeluaran;
 use App\Http\Controllers\Produk;
 use App\Http\Controllers\Profile;
 use App\Http\Controllers\Retur;
+use App\Http\Controllers\SuratJalan;
 use App\Http\Controllers\Transaksi;
 use Illuminate\Support\Facades\Route;
 
@@ -71,6 +74,12 @@ Route::middleware(['auth', 'role:finance'])->prefix('finance')->as('finance.')->
     Route::delete('/transaksi/store/{id}', [Transaksi::class, 'destroy'])->name('transaksi.delete');
     Route::get('/transaksi/pelanggan/{kode}', [Transaksi::class, 'getPelanggan']);
     Route::get('/transaksi/produk/{id}', [Transaksi::class, 'getDetail']);
+    Route::get('/transaksi/detail/{id}', [Transaksi::class, 'detail'])->name('transaksi.detail');
+    Route::get('/transaksi/invoice/{id}', [Transaksi::class, 'invoice'])->name('transaksi.invoice');
+
+    //penagihan
+    Route::get('/penagihan', [Penagihan::class, 'index'])->name('penagihan');
+    Route::put('/penagihan/update/{id}', [Penagihan::class, 'update'])->name('penagihan.update');
 });
 
 //gudang
@@ -109,16 +118,28 @@ Route::middleware(['auth', 'role:gudang'])->prefix('gudang')->as('gudang.')->gro
     Route::get('/kategori/{id}', [Kategori::class, 'show'])->name('kategori.show');
     Route::put('/kategori/update/{id}', [Kategori::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/store/{id}', [Kategori::class, 'destroy'])->name('kategori.delete');
+
+    //surat jalan
+    Route::get('/suratjalan', [SuratJalan::class, 'index'])->name('jalan');
+    Route::get('/suratjalan/get/{id}', [SuratJalan::class, 'getTransaksi'])->name('jalan.getTransaksi');
+    Route::get('/suratjalan/create', [SuratJalan::class, 'create'])->name('jalan.create');
+    Route::post('/suratjalan/store', [SuratJalan::class, 'store'])->name('jalan.store');
+    Route::get('/suratjalan/{id}', [SuratJalan::class, 'show'])->name('jalan.show');
+    Route::put('/suratjalan/update/{id}', [SuratJalan::class, 'update'])->name('jalan.update');
+    Route::delete('/suratjalan/store/{id}', [SuratJalan::class, 'destroy'])->name('jalan.delete');
+    Route::get('/gudang/jalan/print-gabungan/{ids}', [SuratJalan::class, 'printGabungan'])->name('jalan.printGabungan');
 });
 
 
-Route::middleware(['auth', 'role:admin,finance,gudang'])->group(
-    function () {
-        //edit akun
-        Route::get('/users/edit/{id}', [ManajemenUser::class, 'edit'])->name('users.edit');
-        Route::put('/users/edit/{id}', [ManajemenUser::class, 'updateProfile'])->name('users.update.profile');
-    }
-);
+Route::middleware(['auth', 'role:admin,finance,gudang'])->group(function () {
+    //edit akun
+    Route::get('/users/edit/{id}', [ManajemenUser::class, 'edit'])->name('users.edit');
+    Route::put('/users/edit/{id}', [ManajemenUser::class, 'updateProfile'])->name('users.update.profile');
+
+    //barang diterima
+    Route::get('/terima', [BarangDiterima::class, 'index'])->name('terima');
+    Route::put('/terima/update/{id}', [BarangDiterima::class, 'update'])->name('terima.update');
+});
 
 Route::get('/login', [Auth::class, 'index'])->middleware('guest')->name('login');
 Route::post('/login', [Auth::class, 'store'])->name('auth.login');

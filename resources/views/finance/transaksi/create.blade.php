@@ -368,7 +368,7 @@
                                     return;
                                 }
 
-                                fetch(`/finance/transaksi/produk/${this.selectedProduk}`)
+                                fetch(`{{ url('/') }}/finance/transaksi/produk/${this.selectedProduk}`)
                                     .then(res => res.json())
                                     .then(data => {
                                         const satuan = data.satuan;
@@ -475,7 +475,7 @@
                             loadPelanggan() {
                                 if (!this.selectedPelanggan) return;
 
-                                fetch(`/finance/transaksi/pelanggan/${this.selectedPelanggan}`)
+                                fetch(`{{ url('/') }}/finance/transaksi/pelanggan/${this.selectedPelanggan}`)
                                     .then(res => res.json())
                                     .then(data => {
                                         this.pelangganData = {

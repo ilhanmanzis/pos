@@ -109,17 +109,21 @@ class Transaksi extends Controller
             ->orderBy('kode_faktur', 'desc')
             ->first();
 
+        // Jika transaksi terakhir ditemukan
         if ($lastTransaksi) {
+            // Regex untuk format kode_faktur: "00001/06/2025" atau "00001/06/2025.01.1234.22.0000001"
+            preg_match('/^(\d+)\/' . $bulan . '\/' . $tahun . '(\.\d+.*)?$/', $lastTransaksi->kode_faktur, $matches);
+
             // Ambil nomor urut dari kode_faktur yang terakhir
-            // Format kode_faktur: "00001/06/2025.nsfp"
-            preg_match('/^(\d+)\/' . $bulan . '\/' . $tahun . '\./', $lastTransaksi->kode_faktur, $matches);
             $lastNumber = isset($matches[1]) ? intval($matches[1]) : 0;
             $nomorUrut = $lastNumber + 1;
         } else {
             $nomorUrut = 1;
         }
 
+        // Formatkan nomor urut menjadi 5 digit
         $nomorUrut = str_pad($nomorUrut, 5, '0', STR_PAD_LEFT);
+
 
         // Ambil nsfp dari profile
         $profile = Profile::first();
@@ -159,7 +163,7 @@ class Transaksi extends Controller
         }
         return redirect(route('finance.transaksi'))->with([
             'success' => 'Transaksi berhasil disimpan',
-            'open_invoice_url' => url('/finance/transaksi/invoice/' . $transaksi['id_transaksi'])
+            'open_invoice_url' => route('finance.transaksi.invoice', ['id' => $transaksi['id_transaksi']])
         ]);
     }
 

@@ -195,7 +195,7 @@
                                     return;
                                 }
 
-                                fetch(`/gudang/produk/${this.selectedProduk}/stoks`)
+                                fetch(`{{ url('/') }}/gudang/produk/${this.selectedProduk}/stoks`)
                                     .then(res => res.json())
                                     .then(data => {
                                         if (data.length > 0) {

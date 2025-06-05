@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BarangDiterima;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Kategori;
@@ -21,6 +22,9 @@ Route::get('/', [Dashboard::class, 'home'])->name('home');
 
 //admin
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->as('admin.')->group(function () {
+
+    Route::get('/backup', [BackupController::class, 'index'])->name('backup');
+    Route::post('/backup', [BackupController::class, 'backup'])->name('backup.run');
 
     Route::get('/dashboard', [Dashboard::class, 'index'])->name('dashboard');
 
@@ -152,6 +156,9 @@ Route::middleware(['auth', 'role:admin,finance,gudang'])->group(function () {
     Route::post('/laporan/pengeluaran', [Laporan::class, 'pengeluaran'])->name('laporan.pengeluaran');
     Route::get('/laporan/pengeluaran/pdf', [Laporan::class, 'pengeluaranPdf'])->name('laporan.pengeluaran.pdf');
     Route::get('/laporan/pengeluaran/excel', [Laporan::class, 'pengeluaranExcel'])->name('laporan.pengeluaran.excel');
+    Route::get('/laporan/produk/pdf', [Laporan::class, 'produkPdf'])->name('laporan.produk.pdf');
+    Route::get('/laporan/produk/excel', [Laporan::class, 'produkExcel'])->name('laporan.produk.excel');
+    Route::post('/laporan/retur', [Laporan::class, 'retur'])->name('laporan.retur');
 });
 
 Route::get('/login', [Auth::class, 'index'])->middleware('guest')->name('login');

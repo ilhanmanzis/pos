@@ -6,11 +6,16 @@ use App\Exports\Pengeluaran;
 use App\Exports\PengeluaranAll;
 use App\Exports\Piutang;
 use App\Exports\PiutangAll;
+use App\Exports\PriceListExport;
+use App\Exports\Retur;
 use App\Exports\Transaksi;
 use App\Exports\TransaksiAll;
+use App\Models\Kategoris;
 use App\Models\Pelanggans;
 use App\Models\Pengeluarans;
+use App\Models\Produks;
 use App\Models\Profile;
+use App\Models\Returs;
 use App\Models\Transaksis;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -60,11 +65,11 @@ class Laporan extends Controller
         if ($action === 'pdf') {
             $pdf = Pdf::loadView('laporan/piutang', $data);
             $pdf->setPaper('A4', 'portrait');
-            return $pdf->stream('laporan piutang ' . $pelanggan->name . ' -- ' . $pelanggan->kode_pelanggan . ' -- ' . $this->waktu . '' . ' -- ' . $this->waktu . '.pdf');
+            return $pdf->stream('laporan piutang ' . $pelanggan->name . ' -- ' . $pelanggan->kode_pelanggan  . ' -- ' . $this->waktu . '.pdf');
         } else {
             return Excel::download(
                 new Piutang($transaksis, $pelanggan, $profile),
-                'laporan_piutang_' . $pelanggan->name . '_' . $pelanggan->kode_pelanggan . ' -- ' . $this->waktu .  '' . ' -- ' . $this->waktu . '.xlsx'
+                'laporan_piutang_' . $pelanggan->name . '_' . $pelanggan->kode_pelanggan .  ' -- ' . $this->waktu . '.xlsx'
             );
         }
     }
@@ -124,11 +129,11 @@ class Laporan extends Controller
         if ($action === 'pdf') {
             $pdf = Pdf::loadView('laporan/transaksi', $data);
             $pdf->setPaper('A4', 'portrait');
-            return $pdf->stream('laporan transaksi  ' . $bulanTahun .  ' -- ' . $this->waktu . '' . ' -- ' . $this->waktu . '.pdf');
+            return $pdf->stream('laporan transaksi  ' . $bulanTahun . ' -- ' . $this->waktu . '.pdf');
         } else {
             return Excel::download(
                 new Transaksi($transaksis, $bulanTahun, $profile),
-                'laporan_transaksi ' . $bulanTahun . ' -- ' . $this->waktu .  '' . ' -- ' . $this->waktu . '.xlsx'
+                'laporan_transaksi ' . $bulanTahun .  ' -- ' . $this->waktu . '.xlsx'
             );
         }
     }
@@ -188,11 +193,11 @@ class Laporan extends Controller
         if ($action === 'pdf') {
             $pdf = Pdf::loadView('laporan/pengeluaran', $data);
             $pdf->setPaper('A4', 'portrait');
-            return $pdf->stream('laporan pengeluaran  ' . $bulanTahun .  ' -- ' . $this->waktu . '' . ' -- ' . $this->waktu . '.pdf');
+            return $pdf->stream('laporan pengeluaran  ' . $bulanTahun . ' -- ' . $this->waktu . '.pdf');
         } else {
             return Excel::download(
                 new Pengeluaran($pengeluarans, $bulanTahun, $profile),
-                'laporan_pengeluaran ' . $bulanTahun . ' -- ' . $this->waktu .  '' . ' -- ' . $this->waktu . '.xlsx'
+                'laporan_pengeluaran ' . $bulanTahun . ' -- ' . $this->waktu . '.xlsx'
             );
         }
     }
@@ -226,6 +231,72 @@ class Laporan extends Controller
 
 
 
+    public function produkPdf()
+    {
+
+        // Ambil data profile (Nama, Alamat, Logo)
+        $profile = Profile::first();
+
+        // Ambil kategori beserta produk terkait
+        $categories = Kategoris::with(['produks.stoks'])->get();
+
+        // Siapkan data untuk view
+        $data = [
+            'profile' => $profile,
+            'logo' => public_path('storage/logo/' . $profile['logo']),
+            'kategoris' => $categories,
+        ];
+
+        // Render PDF dengan DOMPDF
+        $pdf = PDF::loadView('laporan/produk', $data);
+
+
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream('List produk' . ' -- ' . $this->waktu . '.pdf');
+        // Download PDF
+        //return $pdf->download('price_list.pdf');
+    }
+
+    public function produkExcel()
+    {
+        return Excel::download(new PriceListExport, 'price_list' . ' -- ' . $this->waktu . '.xlsx');
+    }
+
+
+    public function retur(Request $request)
+    {
+        $request->validate(['kondisi' => 'required'], ['kondisi.required' => 'kondisi tidak boleh kosong']);
+
+        $kondisi = $request->input('kondisi');
+        $profile = Profile::first();
+
+        if ($kondisi === 'all') {
+            $returs = Returs::with(['details.produk', 'details.stok'])->get();
+        } elseif ($kondisi === 'bagus') {
+            $returs = Returs::with(['details.produk', 'details.stok'])->where('jenis', 'bagus')->get();
+        } else {
+            $returs = Returs::with(['details.produk', 'details.stok'])->where('jenis', 'rusak')->get();
+        }
+
+        $action = $request->input('action');
+
+        $data = [
+            'returs' => $returs,
+            'profile' => $profile,
+            'logo' => public_path('storage/logo/' . $profile['logo'])
+        ];
+
+        if ($action === 'pdf') {
+            $pdf = Pdf::loadView('laporan/retur', $data);
+            $pdf->setPaper('A4', 'portrait');
+            return $pdf->stream('laporan retur ' .  ' -- ' . $this->waktu . '.pdf');
+        } else {
+            return Excel::download(
+                new Retur($returs, $profile),
+                'laporan_pengeluaran ' . ' -- ' . $this->waktu . '.xlsx'
+            );
+        }
+    }
 
 
 

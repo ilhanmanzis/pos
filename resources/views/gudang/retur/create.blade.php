@@ -190,7 +190,7 @@
                                 }
 
                                 // Ganti URL ini dengan endpoint API backend kamu yang mengembalikan data stok produk
-                                fetch(`/gudang/produk/${this.selectedProduk}/stoks`)
+                                fetch(`{{ url('/') }}/gudang/produk/${this.selectedProduk}/stoks`)
                                     .then(res => res.json())
                                     .then(data => {
 

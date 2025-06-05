@@ -41,10 +41,21 @@
                 <div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                     <div class="px-5 py-4 sm:px-6 sm:py-5">
                         <div class="flex items-center justify-between gap-5">
-                            <a href="{{ route('gudang.produk.create') }}"
-                                class="inline-flex items-center gap-2 px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 mb-5">
-                                Tambah Produk
-                            </a>
+                            <div class="flex justify-start">
+                                <a href="{{ route('gudang.produk.create') }}"
+                                    class="inline-flex items-center gap-2 px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 mb-5">
+                                    Tambah Produk
+                                </a>
+                                <a href="{{ route('laporan.produk.excel') }}" target="blank"
+                                    class="px-4 py-2 bg-success-600 text-white rounded flex justify-between ml-3 mb-5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                    </svg>
+                                    Generate Excell
+                                </a>
+                            </div>
                             <form action="{{ route('gudang.produk') }}" method="get">
                                 <div class="flex justify-between mb-2">
 

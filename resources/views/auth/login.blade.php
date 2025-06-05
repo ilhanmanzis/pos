@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Login</title>
     <link rel="icon" href="{{ asset('storage/logo/' . $profile['logo']) }}">
-    <link rel="stylesheet" href="{{ asset('build/assets/style-tAOd6dsc.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/assets/style-BYo2gUVO.css') }}">
     <link rel="stylesheet" href="{{ url('/') }}/css/style.css">
 </head>
 

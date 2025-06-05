@@ -21,7 +21,7 @@
         /* Header perusahaan */
         .navbar {
             display: flex;
-            width: 80%;
+            margin-left: 40px;
             justify-content: center;
             margin-bottom: 10px;
         }
@@ -133,12 +133,29 @@
         }
 
         .header-logo {
+            width: 80%;
+            margin: auto;
             display: flex;
             justify-content: start;
         }
 
         .logo img {
-            width: 0.8in;
+            padding-top: 5px;
+            width: 1.5in;
+        }
+
+        .tabel-pelanggan {
+            width: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tabel-pelanggan tr,
+        .tabel-pelanggan tr td {
+            border: none;
+            margin: 0;
+            padding: 0;
         }
     </style>
 </head>
@@ -147,13 +164,13 @@
     <div>
         <div class="header-logo">
             <div class="logo">
-                <img src="{{ asset('storage/logo/' . $profile['logo']) }}" alt="">
+                <img src="{{ asset('storage/logo/' . $profile['logo']) }}" alt="" style="width: 1in;">
             </div>
             <div class="navbar">
                 <div class="header">
                     <h2>{{ $profile['name'] }}</h2>
                     <p>{{ $profile['alamat'] }}</p>
-                    <p>{{ $profile['no_hp'] }} | {{ $profile['email'] }}</p>
+                    <p>Telp. {{ $profile['no_hp'] }} | Email: {{ $profile['email'] }}</p>
                 </div>
             </div>
         </div>
@@ -164,17 +181,47 @@
             <table>
                 <tr>
                     <td class="kepada">
-                        <h4>Kepada</h4>
-                        <p>{{ $transaksi->pelanggan->name }}</p>
-                        <p>{{ $transaksi->pelanggan->no_hp }}</p>
-                        <p>{{ $transaksi->pelanggan->email }}</p>
-                        {{-- <p>
-                            {{ $transaksi->pelanggan->alamat }},
-                            {{ $transaksi->pelanggan->desa }},
-                            {{ $transaksi->pelanggan->kecamatan }},
-                            {{ $transaksi->pelanggan->kabupaten }},
-                            {{ $transaksi->pelanggan->provinsi }}
-                        </p> --}}
+                        <h4>Pelanggan</h4>
+                        <table class="tabel-pelanggan">
+                            <tr>
+                                <td style="width: 13%;">Nama</td>
+                                <td style="width: 3%;">:</td>
+                                <td>
+                                    <p>{{ $transaksi->pelanggan->name }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Telp</td>
+                                <td>:</td>
+                                <td>
+                                    <p>{{ $transaksi->pelanggan->no_hp }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>:</td>
+                                <td>
+                                    <p>{{ $transaksi->pelanggan->email }}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top;">Alamat</td>
+                                <td style="vertical-align: top;">:</td>
+                                <td style="vertical-align: top;">
+                                    <p>
+                                        {{ $transaksi->pelanggan->alamat }},
+                                        {{ $transaksi->pelanggan->desa }},
+                                        {{ $transaksi->pelanggan->kecamatan }},
+                                        {{ $transaksi->pelanggan->kabupaten }},
+                                        {{ $transaksi->pelanggan->provinsi }}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+
+
+
+
                     </td>
                     <td class="invoice">
                         <h4>Invoice</h4>
@@ -202,12 +249,13 @@
             <tbody>
                 @foreach ($transaksi->detail as $key => $item)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td style="text-align: center;">{{ $key + 1 }}</td>
                         <td>{{ $item->stok->produk->name }}</td>
-                        <td>{{ $item->stok->size }}</td>
-                        <td>{{ $item->satuan }}</td>
-                        <td>{{ 'Rp ' . number_format($item->harga_jual, 0, ',', '.') }}</td>
-                        <td>{{ $item->qty }}</td>
+                        <td style="text-align: center;">{{ $item->stok->size }}</td>
+                        <td style="text-align: center;">{{ $item->satuan }}</td>
+                        <td>{{ 'Rp ' . number_format($item->harga_jual, 0, ',', '.') }}
+                        </td>
+                        <td style="text-align: center;">{{ $item->qty }}</td>
                         <td>{{ 'Rp ' . number_format($item->sub_total, 0, ',', '.') }}</td>
                     </tr>
                 @endforeach

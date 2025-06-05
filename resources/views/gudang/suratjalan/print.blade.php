@@ -52,7 +52,8 @@
         }
 
         .logo img {
-            width: 0.7in;
+            width: 1in;
+            padding-left: 10px;
         }
 
         .nama-perusahaan {

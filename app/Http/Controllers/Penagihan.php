@@ -13,9 +13,9 @@ class Penagihan extends Controller
     public function index()
     {
         $data = [
-            'selected' =>  'Penagihan',
-            'page' => 'Penagihan',
-            'title' => 'Penagihan',
+            'selected' =>  'Piutang',
+            'page' => 'Piutang',
+            'title' => 'Piutang',
             'transaksis' => Transaksis::where('status', 'belum bayar')->with(['pelanggan'])->filter(request()->only(['transaksi']))->orderBy('updated_at', 'desc')->paginate(10)->withQueryString()
         ];
 

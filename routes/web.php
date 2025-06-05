@@ -5,6 +5,7 @@ use App\Http\Controllers\BarangDiterima;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Kategori;
 use App\Http\Controllers\KategoriPengeluaran;
+use App\Http\Controllers\Laporan;
 use App\Http\Controllers\ManajemenUser;
 use App\Http\Controllers\Pelanggan;
 use App\Http\Controllers\Penagihan;
@@ -127,7 +128,7 @@ Route::middleware(['auth', 'role:gudang'])->prefix('gudang')->as('gudang.')->gro
     Route::get('/suratjalan/{id}', [SuratJalan::class, 'show'])->name('jalan.show');
     Route::put('/suratjalan/update/{id}', [SuratJalan::class, 'update'])->name('jalan.update');
     Route::delete('/suratjalan/store/{id}', [SuratJalan::class, 'destroy'])->name('jalan.delete');
-    Route::get('/gudang/jalan/print-gabungan/{ids}', [SuratJalan::class, 'printGabungan'])->name('jalan.printGabungan');
+    Route::get('/jalan/print-gabungan/{ids}', [SuratJalan::class, 'printGabungan'])->name('jalan.printGabungan');
 });
 
 
@@ -139,6 +140,18 @@ Route::middleware(['auth', 'role:admin,finance,gudang'])->group(function () {
     //barang diterima
     Route::get('/terima', [BarangDiterima::class, 'index'])->name('terima');
     Route::put('/terima/update/{id}', [BarangDiterima::class, 'update'])->name('terima.update');
+
+    //laporan
+    Route::get('/laporan', [Laporan::class, 'index'])->name('laporan');
+    Route::post('/laporan/penagihan', [Laporan::class, 'penagihan'])->name('laporan.penagihan');
+    Route::get('/laporan/penagihan/pdf', [Laporan::class, 'penagihanPdf'])->name('laporan.penagihan.pdf');
+    Route::get('/laporan/penagihan/excel', [Laporan::class, 'penagihanExcel'])->name('laporan.penagihan.excel');
+    Route::post('/laporan/transaksi', [Laporan::class, 'transaksi'])->name('laporan.transaksi');
+    Route::get('/laporan/transaksi/pdf', [Laporan::class, 'transaksiPdf'])->name('laporan.transaksi.pdf');
+    Route::get('/laporan/transaksi/excel', [Laporan::class, 'transaksiExcel'])->name('laporan.transaksi.excel');
+    Route::post('/laporan/pengeluaran', [Laporan::class, 'pengeluaran'])->name('laporan.pengeluaran');
+    Route::get('/laporan/pengeluaran/pdf', [Laporan::class, 'pengeluaranPdf'])->name('laporan.pengeluaran.pdf');
+    Route::get('/laporan/pengeluaran/excel', [Laporan::class, 'pengeluaranExcel'])->name('laporan.pengeluaran.excel');
 });
 
 Route::get('/login', [Auth::class, 'index'])->middleware('guest')->name('login');

@@ -4,16 +4,16 @@
         <span class="logo " :class="sidebarToggle ? 'hidden' : ''">
             <div class="flex justify-start">
 
-                <img class="dark:hidden size-10 sm:hidden md:hidden lg:block"
+                <img class="dark:hidden mt-5 h-7 w-14  sm:hidden md:hidden lg:block"
                     src="{{ asset('storage/logo/' . $profile['logo']) }}" alt="Logo" />
-                <img class="hidden dark:block size-10" src="{{ asset('storage/logo/' . $profile['logo']) }}"
+                <img class="hidden dark:block size-10 mt-5 h-7 w-14" src="{{ asset('storage/logo/' . $profile['logo']) }}"
                     alt="Logo" />
                 <span class="text-lg dark:text-white font-semibold mt-2 mx-2">{{ $profile['name'] }}</span>
             </div>
 
         </span>
 
-        <img class="logo-icon size-10" :class="sidebarToggle ? 'lg:block md:hidden' : 'hidden'"
+        <img class="logo-icon size-10 w-15" :class="sidebarToggle ? 'lg:block md:hidden' : 'hidden'"
             src="{{ asset('storage/logo/' . $profile['logo']) }}" alt="Logo" />
 
 

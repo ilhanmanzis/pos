@@ -128,7 +128,7 @@
                         }
 
                         // Fetch data transaksi lewat API (ganti endpoint sesuai kebutuhan)
-                        fetch(`/gudang/suratjalan/get/${this.selectedTransaksi}`)
+                        fetch(`{{ url('/') }}/gudang/suratjalan/get/${this.selectedTransaksi}`)
                             .then(res => res.json())
                             .then(data => {
                                 if (!data) {

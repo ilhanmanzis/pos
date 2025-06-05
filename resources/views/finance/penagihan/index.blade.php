@@ -7,7 +7,7 @@
     <main>
         <div class="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
             <!-- Breadcrumb Start -->
-            <div x-data="{ pageName: `Penagihan` }">
+            <div x-data="{ pageName: `Piutang` }">
                 <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
                     <h2 class="text-xl font-semibold text-gray-800 dark:text-white/90" x-text="pageName"></h2>
                     @if (session('success'))

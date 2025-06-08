@@ -19,7 +19,7 @@ class ProfileFactory extends Factory
         return [
             'id_profile' => 1,
             'name' => 'PT. Barokah Sukses Abadi Group',
-            'logo' => 'profile.png',
+            'logo' => '1749045731d05eeab8-1295-44c5-a8ba-0f7f974fb654.jpg',
             'alamat' => 'Kota Yogyakarta, Daerah Istimewa Yogyakarta',
             'no_hp' => '08867567567',
             'email' => 'admin@gmail.com',

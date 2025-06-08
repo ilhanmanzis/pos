@@ -23,7 +23,12 @@ class Pengeluarans extends Model
 
         if (isset($filters['pengeluaran']) && $filters['pengeluaran']) {
             $query->where(function ($subQ) use ($filters) {
-                $subQ->where('keterangan', 'like', '%' . $filters['pengeluaran'] . '%');
+                // Filter berdasarkan kolom keterangan di tabel pengeluarans
+                $subQ->where('pengeluarans.keterangan', 'like', '%' . $filters['pengeluaran'] . '%')
+                    // Filter berdasarkan kolom name di tabel kategori_pengeluarans
+                    ->orWhereHas('kategori', function ($query) use ($filters) {
+                        $query->where('name', 'like', '%' . $filters['pengeluaran'] . '%');
+                    });
             });
         }
     }

@@ -159,6 +159,9 @@ Route::middleware(['auth', 'role:admin,finance,gudang'])->group(function () {
     Route::get('/laporan/produk/pdf', [Laporan::class, 'produkPdf'])->name('laporan.produk.pdf');
     Route::get('/laporan/produk/excel', [Laporan::class, 'produkExcel'])->name('laporan.produk.excel');
     Route::post('/laporan/retur', [Laporan::class, 'retur'])->name('laporan.retur');
+    Route::post('/laporan/margin', [Laporan::class, 'margin'])->name('laporan.margin');
+    Route::get('/laporan/margin/pdf', [Laporan::class, 'marginPdf'])->name('laporan.margin.pdf');
+    Route::get('/laporan/margin/excel', [Laporan::class, 'marginExcel'])->name('laporan.margin.excel');
 });
 
 Route::get('/login', [Auth::class, 'index'])->middleware('guest')->name('login');

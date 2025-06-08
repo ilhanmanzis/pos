@@ -376,6 +376,83 @@
 
             </div>
         </div>
+
+        {{-- transaksi --}}
+        <div class="mx-5 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] mb-10">
+            <div class="px-5 py-4 sm:px-6 sm:py-5 flex justify-between">
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white/90">
+                    Margin
+                </h3>
+            </div>
+
+            <div class="space-y-6 border-t border-gray-100 px-5 sm:px-6 dark:border-gray-800" x-data="returForm()">
+
+                <form action="{{ route('laporan.margin') }}" method="post" target="blank">
+                    @csrf
+
+                    <div class="grid grid-cols-2 gap-6 sm:grid-cols-4" style="grid-template-columns: 20% 80%;">
+                        <div class="mt-6">
+                            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                Pilih Bulan Tahun<span class="text-error-500">*</span>
+                            </label>
+                            <input type="month" name="margin" value="{{ old('margin') }}"
+                                class="dark:bg-dark-900 shadow-theme-xs  focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border  bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 {{ $errors->has('margin') ? 'border-error-300 focus:border-error-300 dark:border-error-700 dark:focus:border-error-800' : 'border-gray-300 focus:border-brand-300 dark:border-gray-700' }}"
+                                required />
+                            @error('margin')
+                                <p class="text-theme-xs text-error-500 my-1.5">
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                        <div class="my-10 flex justify-start ">
+                            <button type="submit" name="action" value="pdf" target="blank"
+                                class="px-2 py-2 bg-blue-600 text-white rounded flex mt-3 justify-between">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                                Generate PDF
+                            </button>
+                            <button type="submit" name="action" value="excel" target="blank"
+                                class="px-4 py-2 bg-success-600 text-white rounded flex mt-3 justify-between ml-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                                Generate Excel
+                            </button>
+
+                            <a href="{{ route('laporan.margin.pdf') }}" target="blank"
+                                class="px-4 py-2 bg-brand-600 text-white rounded flex mt-3 justify-between ml-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                                Generate All PDF
+                            </a>
+
+                            <a href="{{ route('laporan.margin.excel') }}" target="blank"
+                                class="px-4 py-2 bg-success-600 text-white rounded flex mt-3 justify-between ml-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                </svg>
+                                Generate All Excel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+
+
+
+
+
+            </div>
+        </div>
     </div>
 
     <link href="{{ asset('css/tom-select.css') }}" rel="stylesheet">

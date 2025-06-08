@@ -282,7 +282,7 @@
                     const transaksiId = button.getAttribute('data-id');
                     // Update action form sesuai transaksiId
                     form.action =
-                        `/finance/penagihan/update/${transaksiId}`; // Sesuaikan route kalau beda
+                        `{{ url('/') }}/finance/penagihan/update/${transaksiId}`; // Sesuaikan route kalau beda
                     modal.classList.remove('hidden');
                 });
             });

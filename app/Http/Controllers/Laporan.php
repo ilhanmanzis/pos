@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\Margin;
+use App\Exports\MarginAll;
 use App\Exports\Pengeluaran;
 use App\Exports\PengeluaranAll;
 use App\Exports\Piutang;
@@ -16,6 +18,7 @@ use App\Models\Pengeluarans;
 use App\Models\Produks;
 use App\Models\Profile;
 use App\Models\Returs;
+use App\Models\TransaksiDetail;
 use App\Models\Transaksis;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -297,6 +300,232 @@ class Laporan extends Controller
             );
         }
     }
+
+
+    public function margin(Request $request)
+    {
+        $request->validate(['margin' => 'required'], ['margin.required' => 'margin tidak boleh kosong']);
+        // Ambil input bulan_tahun dalam format YYYY-MM
+        $bulanTahun = $request->input('margin');
+
+        // Pisahkan bulan dan tahun dari input
+        $tahun = substr($bulanTahun, 0, 4); // Ambil 4 digit pertama sebagai tahun
+        $bulan = substr($bulanTahun, 5, 2); // Ambil 2 digit setelahnya sebagai bulan
+
+        $details = TransaksiDetail::with(['stok.produk', 'transaksi'])
+            ->whereHas('transaksi', fn($q) => $q->whereMonth('tanggal', $bulan)->whereYear('tanggal', $tahun)->where('status', 'lunas'))
+            ->get();
+
+        $produkList = [];
+        //dd($details);
+
+        foreach ($details as $detail) {
+            $produkName = $detail->stok->produk->name;
+            $satuan = $detail->satuan;
+            $qty = $detail->qty;
+            $hargaJualPerUnit = $detail->harga_jual; // Harga jual per unit
+            $stok = $detail->stok;
+
+            // Harga beli dari tabel produk_stok
+            $hargaBeli = $stok->harga_beli;
+            $isi = $stok->isi_persatuan ?? 1;
+
+            // Konversi harga beli jika satuannya pcs
+            $hargaBeliPerUnit = $satuan === 'pcs' ? ($hargaBeli / $isi) : $hargaBeli;
+
+
+
+            // Menghitung total harga jual (total harga per produk, bukan per unit)
+            $totalHargaJual = $hargaJualPerUnit * $qty;
+
+            // Menghitung margin per unit dan total margin
+            $marginPerUnit = $hargaJualPerUnit - $hargaBeliPerUnit;
+            $totalMargin = $marginPerUnit * $qty;
+
+            if (!isset($produkList[$produkName])) {
+                $produkList[$produkName] = [
+                    'nama' => $produkName,
+                    'harga_beli_terakhir' => $hargaBeli, // dari stok terakhir yang dipakai
+                    'jumlah' => [],
+                    'total_harga_jual' => 0,
+                    'total_margin' => 0
+                ];
+            }
+
+            // Menambah jumlah berdasarkan satuan
+            if (!isset($produkList[$produkName]['jumlah'][$satuan])) {
+                $produkList[$produkName]['jumlah'][$satuan] = 0;
+            }
+            $produkList[$produkName]['jumlah'][$satuan] += $qty;
+
+            // Menambahkan total harga jual dan total margin
+            $produkList[$produkName]['total_harga_jual'] += $totalHargaJual;
+            $produkList[$produkName]['total_margin'] += $totalMargin;
+
+            // Update harga beli terakhir jika perlu (optional)
+            $produkList[$produkName]['harga_beli_terakhir'] = $hargaBeli;
+        }
+
+        $profile = Profile::first();
+        $action = $request->input('action');
+        $data = [
+            'data' => $produkList,
+            'logo' => public_path('storage/logo/' . $profile['logo']),
+            'profile' => $profile,
+            'bulanTahun' => $bulanTahun,
+        ];
+        //dd($data);
+
+        if ($action === 'pdf') {
+            $pdf = Pdf::loadView('laporan.margin', $data);
+            $pdf->setPaper('A4', 'portrait');
+            return $pdf->stream('laporan margin  ' . $bulanTahun . ' -- ' . $this->waktu . '.pdf');
+        } else {
+            return Excel::download(
+                new Margin($produkList, $bulanTahun, $profile),
+                'laporan_margin ' . $bulanTahun .  ' -- ' . $this->waktu . '.xlsx'
+            );
+        }
+    }
+
+    public function marginPdf()
+    {
+        $details = TransaksiDetail::with(['stok.produk', 'transaksi'])
+            ->whereHas('transaksi', fn($q) => $q->where('status', 'lunas'))
+            ->get();
+
+        $produkList = [];
+        //dd($details);
+
+        foreach ($details as $detail) {
+            $produkName = $detail->stok->produk->name;
+            $satuan = $detail->satuan;
+            $qty = $detail->qty;
+            $hargaJualPerUnit = $detail->harga_jual; // Harga jual per unit
+            $stok = $detail->stok;
+
+            // Harga beli dari tabel produk_stok
+            $hargaBeli = $stok->harga_beli;
+            $isi = $stok->isi_persatuan ?? 1;
+
+            // Konversi harga beli jika satuannya pcs
+            $hargaBeliPerUnit = $satuan === 'pcs' ? ($hargaBeli / $isi) : $hargaBeli;
+
+
+
+            // Menghitung total harga jual (total harga per produk, bukan per unit)
+            $totalHargaJual = $hargaJualPerUnit * $qty;
+
+            // Menghitung margin per unit dan total margin
+            $marginPerUnit = $hargaJualPerUnit - $hargaBeliPerUnit;
+            $totalMargin = $marginPerUnit * $qty;
+
+            if (!isset($produkList[$produkName])) {
+                $produkList[$produkName] = [
+                    'nama' => $produkName,
+                    'harga_beli_terakhir' => $hargaBeli, // dari stok terakhir yang dipakai
+                    'jumlah' => [],
+                    'total_harga_jual' => 0,
+                    'total_margin' => 0
+                ];
+            }
+
+            // Menambah jumlah berdasarkan satuan
+            if (!isset($produkList[$produkName]['jumlah'][$satuan])) {
+                $produkList[$produkName]['jumlah'][$satuan] = 0;
+            }
+            $produkList[$produkName]['jumlah'][$satuan] += $qty;
+
+            // Menambahkan total harga jual dan total margin
+            $produkList[$produkName]['total_harga_jual'] += $totalHargaJual;
+            $produkList[$produkName]['total_margin'] += $totalMargin;
+
+            // Update harga beli terakhir jika perlu (optional)
+            $produkList[$produkName]['harga_beli_terakhir'] = $hargaBeli;
+        }
+
+        $profile = Profile::first();
+        $data = [
+            'data' => $produkList,
+            'logo' => public_path('storage/logo/' . $profile['logo']),
+            'profile' => $profile,
+        ];
+        //dd($data);
+
+
+        $pdf = Pdf::loadView('laporan/marginall', $data);
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream('laporan margin' . ' -- ' . $this->waktu . '.pdf');
+    }
+
+    public function marginExcel()
+    {
+        $details = TransaksiDetail::with(['stok.produk', 'transaksi'])
+            ->whereHas('transaksi', fn($q) => $q->where('status', 'lunas'))
+            ->get();
+
+        $produkList = [];
+        //dd($details);
+
+        foreach ($details as $detail) {
+            $produkName = $detail->stok->produk->name;
+            $satuan = $detail->satuan;
+            $qty = $detail->qty;
+            $hargaJualPerUnit = $detail->harga_jual; // Harga jual per unit
+            $stok = $detail->stok;
+
+            // Harga beli dari tabel produk_stok
+            $hargaBeli = $stok->harga_beli;
+            $isi = $stok->isi_persatuan ?? 1;
+
+            // Konversi harga beli jika satuannya pcs
+            $hargaBeliPerUnit = $satuan === 'pcs' ? ($hargaBeli / $isi) : $hargaBeli;
+
+
+
+            // Menghitung total harga jual (total harga per produk, bukan per unit)
+            $totalHargaJual = $hargaJualPerUnit * $qty;
+
+            // Menghitung margin per unit dan total margin
+            $marginPerUnit = $hargaJualPerUnit - $hargaBeliPerUnit;
+            $totalMargin = $marginPerUnit * $qty;
+
+            if (!isset($produkList[$produkName])) {
+                $produkList[$produkName] = [
+                    'nama' => $produkName,
+                    'harga_beli_terakhir' => $hargaBeli, // dari stok terakhir yang dipakai
+                    'jumlah' => [],
+                    'total_harga_jual' => 0,
+                    'total_margin' => 0
+                ];
+            }
+
+            // Menambah jumlah berdasarkan satuan
+            if (!isset($produkList[$produkName]['jumlah'][$satuan])) {
+                $produkList[$produkName]['jumlah'][$satuan] = 0;
+            }
+            $produkList[$produkName]['jumlah'][$satuan] += $qty;
+
+            // Menambahkan total harga jual dan total margin
+            $produkList[$produkName]['total_harga_jual'] += $totalHargaJual;
+            $produkList[$produkName]['total_margin'] += $totalMargin;
+
+            // Update harga beli terakhir jika perlu (optional)
+            $produkList[$produkName]['harga_beli_terakhir'] = $hargaBeli;
+        }
+
+        $profile = Profile::first();
+        return Excel::download(
+            new MarginAll($produkList, $profile),
+            'laporan_margin' . ' -- ' . $this->waktu . '.xlsx'
+        );
+    }
+
+
+
+
+
+
 
 
 

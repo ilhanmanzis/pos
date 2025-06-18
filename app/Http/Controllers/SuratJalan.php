@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\ProdukStok;
 use App\Models\Profile;
 use App\Models\SuratJalan as ModelsSuratJalan;
+use App\Models\SuratJalanDetails;
 use App\Models\TransaksiDetail;
 use App\Models\Transaksis;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,12 +19,12 @@ class SuratJalan extends Controller
      */
     public function index()
     {
-        $transaksis = Transaksis::with('pelanggan', 'detail', 'suratJalan') // pastikan relasi 'suratJalan' ada di model Transaksis
-            ->whereHas('suratJalan', function ($query) {
+        $transaksis = Transaksis::with('pelanggan', 'detail', 'suratJalanDetails') // pastikan relasi 'suratJalan' ada di model Transaksis
+            ->whereHas('suratJalanDetails', function ($query) {
                 // Cari yang statusnya bukan 'diambil'
                 $query->where('status', '!=', 'diambil');
             })
-            ->orWhereDoesntHave('suratJalan') // atau yang belum punya surat_jalan
+            ->orWhereDoesntHave('suratJalanDetails') // atau yang belum punya surat_jalan
             ->get();
         $data = [
             'selected' =>  'Surat Jalan',
@@ -69,50 +71,63 @@ class SuratJalan extends Controller
         if (!$keranjang || count($keranjang) == 0) {
             return back()->withErrors(['keranjang' => 'Data invoice kosong']);
         }
+        $tanggal = Carbon::parse($request->tanggal);
+        $bulan = $tanggal->format('m');
+        $tahun = $tanggal->format('Y');
 
-        $suratJalanIds = [];
+        // Cari transaksi dengan kode_faktur terbesar di bulan & tahun ini
+        $lastSj = ModelsSuratJalan::whereMonth('tanggal_pengiriman', $bulan)
+            ->whereYear('tanggal_pengiriman', $tahun)
+            ->orderBy('nomor', 'desc')
+            ->first();
+
+        // Jika transaksi terakhir ditemukan
+        if ($lastSj) {
+            // Regex untuk format kode_faktur: "00001/06/2025" atau "00001/06/2025.01.1234.22.0000001"
+            preg_match('/^(\d+)\/' . $bulan . '\/' . $tahun . '(\.\d+.*)?$/', $lastSj->nomor, $matches);
+
+            // Ambil nomor urut dari kode_faktur yang terakhir
+            $lastNumber = isset($matches[1]) ? intval($matches[1]) : 0;
+            $nomorUrut = $lastNumber + 1;
+        } else {
+            $nomorUrut = 1;
+        }
+
+        // Formatkan nomor urut menjadi 5 digit
+        $nomorUrut = str_pad($nomorUrut, 5, '0', STR_PAD_LEFT);
+        $nomorJalan = "{$nomorUrut}/{$bulan}/{$tahun}";
+        // Tambahkan entri ke tabel sj (many-to-many relationship)
+
+        // Buat surat jalan baru
+        $suratJalan = ModelsSuratJalan::create([
+            'id_user' => Auth::id(),
+            'tanggal_pengiriman' => now(),
+            'jam' => now(),
+            'nomor' => $nomorJalan
+        ]);
+
         foreach ($keranjang as $item) {
             $idTransaksi = $item['id_transaksi'];
 
             // Cek apakah surat jalan sudah ada untuk kode faktur ini
-            $existingSuratJalan = ModelsSuratJalan::where('kode_faktur', $item['kode_faktur'])->first();
+            $existingSuratJalan = SuratJalanDetails::where('kode_faktur', $item['kode_faktur'])->first();
 
             if ($existingSuratJalan) {
-                // Surat jalan sudah ada, simpan id untuk cetak nanti
-                $suratJalanIds[] = $existingSuratJalan->id_surat_jalan;
+                SuratJalanDetails::create([
+                    'kode_faktur' => $item['kode_faktur'],
+                    'id_surat_jalan' => $suratJalan['id_surat_jalan']
+                ]);
                 continue; // Lewatkan pembuatan ulang surat jalan
             }
 
             // Cek stok cukup
             $transaksiDetails = TransaksiDetail::where('id_transaksi', $idTransaksi)->get();
 
-            //foreach ($transaksiDetails as $detail) {
-            //    $produkStok = ProdukStok::with('produk')->find($detail->id_stok);
-
-            //    if ($produkStok->jumlah_satuan < $detail->qty) {
-            //         return back()->withErrors(['error' => "Stok barang " . $produkStok->produk->name . " tidak //mencukupi, sisa stok: " . $produkStok->jumlah_satuan . " " . $produkStok->satuan . //($produkStok->pcs === 0 ? "" : ", " . $produkStok->pcs . " pcs")]);
-            //    }
-            // }
-
-            // Buat surat jalan baru
-            $suratJalan = ModelsSuratJalan::create([
-                'kode_faktur' => $item['kode_faktur'],
-                'id_user' => Auth::id(),
-                'tanggal_pengiriman' => now(),
-                'jam' => now(),
-                'status' => 'pending',
-            ]);
-
-            // Kurangi stok
-            //foreach ($transaksiDetails as $detail) {
-            //  $produkStok = ProdukStok::find($detail->id_stok);
-            //$produkStok->jumlah_satuan -= $detail->qty;
-            //$produkStok->save();
-            //}
 
             // Kurangi stok
             foreach ($transaksiDetails as $detail) {
                 $produkStok = ProdukStok::with('produk')->find($detail->id_stok);
+
                 $qty = $detail->qty;
                 $satuan = $detail->satuan; // bisa 'pcs' atau satuan besar (box, pack, dll)
                 $isiPerSatuan = $produkStok->isi_persatuan;
@@ -127,8 +142,8 @@ class SuratJalan extends Controller
                         $jumlahSatuanTerpakai = (int) ceil($sisaPcs / $isiPerSatuan);
 
                         if ($produkStok->jumlah_satuan < $jumlahSatuanTerpakai) {
-                            return back()->withErrors([
-                                'error' => "Stok produk '{$produkStok->produk->name}' tidak cukup. Butuh tambahan $jumlahSatuanTerpakai {$produkStok->satuan}"
+                            return back()->with([
+                                'error' => "Stok produk {$produkStok->produk->name} dengan size {$produkStok->size} tidak cukup. Butuh tambahan $jumlahSatuanTerpakai {$satuan}"
                             ]);
                         }
 
@@ -140,8 +155,8 @@ class SuratJalan extends Controller
                 } else {
                     // Satuan besar: box, pack, dll
                     if ($produkStok->jumlah_satuan < $qty) {
-                        return back()->withErrors([
-                            'error' => "Stok produk '{$produkStok->produk->name}' tidak cukup untuk {$qty} {$satuan}"
+                        return back()->with([
+                            'error' => "Stok produk {$produkStok->produk->name}  dengan size {$produkStok->size}  tidak cukup untuk {$qty} {$satuan}"
                         ]);
                     }
 
@@ -152,30 +167,73 @@ class SuratJalan extends Controller
                 $produkStok->save();
             }
 
-            // Simpan id surat jalan yang baru dibuat untuk cetak nanti
-            $suratJalanIds[] = $suratJalan->id_surat_jalan;
+            SuratJalanDetails::create([
+                'kode_faktur' => $item['kode_faktur'],
+                'id_surat_jalan' => $suratJalan['id_surat_jalan']
+            ]);
         }
-
-        // Gabungkan semua id surat jalan menjadi string pemisah koma
-        $allIds = implode(',', $suratJalanIds);
 
 
         return redirect(route('gudang.jalan'))->with([
             'success' => 'Surat jalan berhasil dibuat dan stok diperbarui.',
-            'open_invoice_url' => url(route('gudang.jalan.printGabungan', ['ids' => $allIds]))
+            'open_invoice_url' => url(route('gudang.jalan.printGabungan', ['id' => $suratJalan['id_surat_jalan']]))
         ]);
     }
 
-    public function printGabungan($ids)
+    public function printGabungan($id)
     {
-        // Ubah string '1,2,3' jadi array [1,2,3]
-        $idArray = explode(',', $ids);
 
-        // Ambil semua surat jalan sesuai id
-        $suratJalans = ModelsSuratJalan::with('transaksi.detail.stok.produk')->whereIn('id_surat_jalan', $idArray)->get();
+        $suratJalan  = ModelsSuratJalan::with(['suratJalanDetails.transaksi.detail.stok.produk'])->find($id);
         $profile = Profile::first();
 
-        return view('gudang/suratjalan/print', compact('suratJalans', 'profile'));
+        // Array untuk menyimpan data produk total
+        $produkData = [];
+        $invoiceCodes = [];
+
+        // Proses untuk mengumpulkan data produk dari sjDetails
+        foreach ($suratJalan->suratJalanDetails as $sjd) {
+            foreach ($sjd->transaksi->detail as $detail) {
+                // Ambil produk stok dari transaksi detail
+                $produkStok = $detail->stok;
+                $produk = $produkStok->produk;
+                $satuan = $detail->satuan;
+                $qty = $detail->qty;
+
+                // Tentukan key pengelompokan berdasarkan nama produk, size, dan satuan
+                $key = $produk->name . '|' . $produkStok->size . '|' . $satuan;
+
+                // Tambahkan produk ke dalam array $produkData berdasarkan produk_id dan size
+                if (isset($produkData[$key])) {
+                    // Menambahkan kuantitas produk yang sama
+                    $produkData[$key]['qty'] += $qty;
+                } else {
+                    $produkData[$key] = [
+                        'kode' => $produk->kode,
+                        'produk_name' => $produk->name,
+                        'qty' => $qty,
+                        'satuan' => $satuan,
+                        'size' => $produkStok->size,
+                        'merk' => $produk->merk,
+                    ];
+                }
+
+                // Menambahkan kode faktur untuk surat jalan
+
+            }
+            $invoiceCodes[] = $sjd->transaksi->kode_faktur;
+        }
+
+        // Menghilangkan duplikasi kode faktur
+        $invoiceCodes = array_unique($invoiceCodes);
+        //dd($produkData);
+
+        //dd($sj);
+
+
+        //dd($invoiceCodes);
+
+        // Kirim data ke view
+        return view('gudang/suratjalan/print', compact('suratJalan', 'produkData', 'invoiceCodes', 'profile'));
     }
 
     /**

@@ -31,9 +31,9 @@ class Transaksis extends Model
         return $this->hasMany(TransaksiDetail::class, 'id_transaksi');
     }
 
-    public function suratJalan(): HasOne
+    public function suratJalanDetails(): HasMany
     {
-        return $this->hasOne(SuratJalan::class, 'kode_faktur', 'kode_faktur');
+        return $this->hasMany(SuratJalanDetails::class, 'kode_faktur', 'kode_faktur');
     }
 
     public function scopeFilter($query, $filters)

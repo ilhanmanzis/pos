@@ -132,7 +132,7 @@ Route::middleware(['auth', 'role:gudang'])->prefix('gudang')->as('gudang.')->gro
     Route::get('/suratjalan/{id}', [SuratJalan::class, 'show'])->name('jalan.show');
     Route::put('/suratjalan/update/{id}', [SuratJalan::class, 'update'])->name('jalan.update');
     Route::delete('/suratjalan/store/{id}', [SuratJalan::class, 'destroy'])->name('jalan.delete');
-    Route::get('/jalan/print-gabungan/{ids}', [SuratJalan::class, 'printGabungan'])->name('jalan.printGabungan');
+    Route::get('/jalan/print-gabungan/{id}', [SuratJalan::class, 'printGabungan'])->name('jalan.printGabungan');
 });
 
 

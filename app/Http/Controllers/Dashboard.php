@@ -34,8 +34,8 @@ class Dashboard extends Controller
             ->orderBy('tahun', 'desc') // urutkan tahun dari yang terbaru
             ->pluck('tahun');
         // Data pemasukan dan pengeluaran berdasarkan bulan untuk tahun yang dipilih
-        $pemasukan = Transaksis::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bulan, SUM(total_harga) as total_pemasukan')
-            ->whereYear('created_at', $tahun)
+        $pemasukan = Transaksis::selectRaw('DATE_FORMAT(updated_at, "%Y-%m") as bulan, SUM(total_harga) as total_pemasukan')
+            ->whereYear('created_at', $tahun)->where('status', 'lunas')
             ->groupBy('bulan')
             ->get();
 
@@ -96,8 +96,8 @@ class Dashboard extends Controller
             ->orderBy('tahun', 'desc') // urutkan tahun dari yang terbaru
             ->pluck('tahun');
         // Data pemasukan dan pengeluaran berdasarkan bulan untuk tahun yang dipilih
-        $pemasukan = Transaksis::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bulan, SUM(total_harga) as total_pemasukan')
-            ->whereYear('created_at', $tahun)
+        $pemasukan = Transaksis::selectRaw('DATE_FORMAT(updated_at, "%Y-%m") as bulan, SUM(total_harga) as total_pemasukan')
+            ->whereYear('created_at', $tahun)->where('status', 'lunas')
             ->groupBy('bulan')
             ->get();
 
@@ -159,8 +159,8 @@ class Dashboard extends Controller
             ->orderBy('tahun', 'desc') // urutkan tahun dari yang terbaru
             ->pluck('tahun');
         // Data pemasukan dan pengeluaran berdasarkan bulan untuk tahun yang dipilih
-        $pemasukan = Transaksis::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bulan, SUM(total_harga) as total_pemasukan')
-            ->whereYear('created_at', $tahun)
+        $pemasukan = Transaksis::selectRaw('DATE_FORMAT(updated_at, "%Y-%m") as bulan, SUM(total_harga) as total_pemasukan')
+            ->whereYear('created_at', $tahun)->where('status', 'lunas')
             ->groupBy('bulan')
             ->get();
 

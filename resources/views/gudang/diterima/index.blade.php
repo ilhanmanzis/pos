@@ -209,7 +209,7 @@
                                                                     <div class="flex -space-x-2">
                                                                         <p
                                                                             class="text-gray-500 text-theme-sm dark:text-gray-400">
-                                                                            {{ $transaksi->suratJalan->status }}
+                                                                            {{ $transaksi->suratJalanDetails[0]->status }}
                                                                         </p>
                                                                     </div>
                                                                 </div>

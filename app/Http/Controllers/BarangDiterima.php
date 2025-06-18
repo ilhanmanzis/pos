@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SuratJalan;
+use App\Models\SuratJalanDetails;
 use App\Models\Transaksis;
 use Illuminate\Http\Request;
 
@@ -13,8 +14,8 @@ class BarangDiterima extends Controller
      */
     public function index()
     {
-        $transaksis = Transaksis::with('pelanggan', 'detail', 'suratJalan')->filter(request()->only(['transaksi'])) // pastikan relasi 'suratJalan' ada di model Transaksis
-            ->whereHas('suratJalan', function ($query) {
+        $transaksis = Transaksis::with('pelanggan', 'detail', 'suratJalanDetails')->filter(request()->only(['transaksi'])) // pastikan relasi 'suratJalanDetails' ada di model Transaksis
+            ->whereHas('suratJalanDetails', function ($query) {
                 // Cari yang statusnya bukan 'diambil'
                 $query->where('status', '!=', 'diambil');
             })
@@ -25,6 +26,7 @@ class BarangDiterima extends Controller
             'title' => 'Produk Diterima',
             'transaksis' => $transaksis
         ];
+        //dd($transaksis);
 
         return view('gudang/diterima/index', $data);
     }
@@ -67,7 +69,7 @@ class BarangDiterima extends Controller
     public function update(Request $request, string $id)
     {
         $transaksi = Transaksis::find($id);
-        SuratJalan::where('kode_faktur', $transaksi['kode_faktur'])->update([
+        SuratJalanDetails::where('kode_faktur', $transaksi['kode_faktur'])->update([
             'status' => 'diambil'
         ]);
         return redirect()->back()->with('success', 'Produk Berhasil Diterima');

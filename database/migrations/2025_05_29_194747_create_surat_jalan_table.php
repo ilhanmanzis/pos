@@ -13,14 +13,11 @@ return new class extends Migration
     {
         Schema::create('surat_jalan', function (Blueprint $table) {
             $table->bigIncrements('id_surat_jalan');
-            $table->string('kode_faktur')->unique();
             $table->unsignedBigInteger('id_user');
             $table->date('tanggal_pengiriman');
             $table->time('jam');
-            $table->enum('status', ['gagal', 'diambil', 'pending'])->default('pending');
+            $table->string('nomor');
             $table->timestamps();
-
-            $table->foreign('kode_faktur')->references('kode_faktur')->on('transaksis')->onDelete('cascade');
         });
     }
 

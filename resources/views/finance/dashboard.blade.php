@@ -88,7 +88,7 @@
 
                     <div class="mt-5 flex items-end justify-between">
                         <div>
-                            <span class="text-sm text-gray-500 dark:text-gray-400">Pengeluatan Hari Ini</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">Pengeluaran Hari Ini</span>
                             <h4 class="mt-2 text-2xl font-bold text-gray-800 dark:text-white/90">
                                 Rp. {{ number_format($pengeluaranHariIni, 0, ',', '.') }}
                             </h4>

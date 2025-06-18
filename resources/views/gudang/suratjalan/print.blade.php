@@ -15,13 +15,13 @@
         }
 
         body {
-            margin: 0;
+            margin: 10px 0 0 0;
             font-family: Arial, sans-serif;
         }
 
         .print-page {
-            width: 9.5in;
-            height: 11in;
+            /* width: 9.5in;
+            height: 11in; */
             page-break-after: always;
             padding: 0.25in 0.5in;
             box-sizing: border-box;
@@ -145,89 +145,98 @@
 </head>
 
 <body>
-    @foreach ($suratJalans as $surat)
-        <div class="print-page">
-            <table>
-                <thead>
-                    <tr>
-                        <td colspan="4" class="header-cell td-logo">
-                            <div class="header">
-                                <div class="logo"><img src="{{ asset('storage/logo/' . $profile['logo']) }}"
-                                        alt=""></div>
-                                <div class="nama-perusahaan">
-                                    <h2>{{ $profile['name'] }}</h2>
-                                    <p>{{ $profile['alamat'] }}</p>
-                                    <p>Telp. {{ $profile['no_hp'] }} | email: {{ $profile['email'] }}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td colspan="2" class="td-jalan">
-                            <table class="invoice">
-                                <tr>
-                                    <td>Tanggal</td>
-                                    <td>:</td>
-                                    <td>{{ $surat->tanggal_pengiriman }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="header-cell">Nomor</td>
-                                    <td class="header-cell">:</td>
-                                    <td class="header-cell">{{ $surat->kode_faktur }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Pelanggan</td>
-                                    <td>:</td>
-                                    <td>{{ $surat->transaksi->pelanggan->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Daerah</td>
-                                    <td>:</td>
-                                    <td>{{ $surat->transaksi->pelanggan->kabupaten }}</td>
-                                </tr>
-                            </table>
-                            <h1 style="text-align: center;">Surat Jalan</h1>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="kode">Kode</th>
-                        <th class="qty">QTY</th>
-                        <th class="satuan">Satuan</th>
-                        <th class="nama_barang">Nama Barang</th>
-                        <th class="size">Size</th>
-                        <th class="keterangan">Keterangan</th>
-                    </tr>
 
-                    @foreach ($surat->transaksi->detail as $item)
-                        <tr>
-                            <td style="text-align: center;">{{ $item->stok->produk->kode }}</td>
-                            <td style="text-align: center;">{{ $item->qty }}</td>
-                            <td style="text-align: center;">{{ $item->satuan }}</td>
-                            <td>{{ $item->stok->produk->name }}</td>
-                            <td style="text-align: center;">{{ $item->stok->size }}</td>
-                            <td>Merek {{ $item->stok->produk->merk }}</td>
-                        </tr>
-                    @endforeach
-
-                    <tr>
-                        <td colspan="6">
-                            <div class="ttd">
-                                <div class="font">
-                                    Penerima :<br>
-                                    CAP, TTD, TGL<br>
-                                    <div class="bottom"></div>
-                                    ......................................
-                                </div>
-                                <div class="font" style="text-align: center;">
-                                    <strong>Hormat Kami :</strong><br><br>
-                                    <div class="bottom"></div>
-                                    <strong>{{ $profile['name'] }}</strong>
-                                </div>
+    <div class="print-page">
+        <table>
+            <thead>
+                <tr>
+                    <td colspan="4" class="header-cell td-logo">
+                        <div class="header">
+                            <div class="logo"><img src="{{ asset('storage/logo/' . $profile['logo']) }}" alt="">
                             </div>
-                        </td>
+                            <div class="nama-perusahaan">
+                                <h2>{{ $profile['name'] }}</h2>
+                                <p>{{ $profile['alamat'] }}</p>
+                                <p>Telp. {{ $profile['no_hp'] }} | email: {{ $profile['email'] }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td colspan="2" class="td-jalan">
+                        <table class="invoice">
+                            <tr style="margin: 10px;">
+                                <td>Tanggal</td>
+                                <td>:</td>
+                                <td>{{ $suratJalan->tanggal_pengiriman }}</td>
+                            </tr>
+                            <tr>
+                                <td class="header-cell">Nomor</td>
+                                <td class="header-cell">:</td>
+                                <td class="header-cell">{{ $suratJalan->nomor }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <h1 style="text-align: center;">Surat Jalan</h1>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="kode">Kode</th>
+                    <th class="qty">QTY</th>
+                    <th class="satuan">Satuan</th>
+                    <th class="nama_barang">Nama Barang</th>
+                    <th class="size">Size</th>
+                    <th class="keterangan">Keterangan</th>
+                </tr>
+
+                @foreach ($produkData as $key => $data)
+                    <tr>
+                        <td style="text-align: center;">{{ $data['kode'] }}</td>
+                        <td style="text-align: center;">{{ $data['qty'] }}</td>
+                        <td style="text-align: center;">{{ $data['satuan'] }}</td>
+                        <td>{{ $data['produk_name'] }}</td>
+                        <td style="text-align: center;">{{ $data['size'] }}</td>
+                        <td>Merek {{ $data['merk'] }}</td>
                     </tr>
-                </thead>
-            </table>
-        </div>
-    @endforeach
+                @endforeach
+                <tr>
+                    <td colspan="6"></td>
+                </tr>
+                <tr>
+                    <td style="text-align: center" colspan="6"><strong>Invoice</strong></td>
+                    {{-- <td style="text-align: center"><strong>Diterima</strong></td> --}}
+                </tr>
+                @foreach ($invoiceCodes as $index => $kode_faktur)
+                    <tr>
+                        <td colspan="6">{{ $kode_faktur }}</td>
+                        {{-- <td style="text-align: center"></td> --}}
+                    </tr>
+                @endforeach
+                <tr>
+                    <td colspan="6">
+                        <div class="ttd">
+                            <div class="font">
+                                <br>
+                                <br>
+                                <div class="bottom"></div>
+                                ......................................
+                                <h3 style="text-align: center;"><strong>Gudang</strong></h3>
+                            </div>
+                            <div class="font" style="text-align: center;">
+                                <br><br>
+                                <div class="bottom"></div>
+                                ......................................
+                                <h3><strong>Pengirim</strong></h3>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
     <script>
         // Fungsi untuk otomatis membuka print dialog saat halaman dimuat
         window.onload = function() {

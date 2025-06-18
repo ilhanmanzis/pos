@@ -19,7 +19,6 @@ npm install
 
 ```
 cp .env.example .env
-php artisan key:generate
 ```
 
 Edit file .env, contoh:
@@ -28,27 +27,47 @@ Edit file .env, contoh:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=rentalps
+DB_DATABASE=kasir
 DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### 4. Migrasi Database dan Seeder
+### 4. Generate Key
+
+```
+php artisan key:generate
+```
+
+### 5. Migrasi Database dan Seeder
 
 ```
 php artisan migrate --seed
 ```
 
-### 5. Jalankan Aplikasi
+### 6. Jalankan Aplikasi
 
 ```
 php artisan serve
 ```
 
-### 6. link storage
+### 7. link storage
 
 ```
 php artisan storage:link
+```
+
+##
+
+### Develpoment
+
+```
+npm run dev
+```
+
+### Build Vite
+
+```
+npm run build
 ```
 
 ## ERD

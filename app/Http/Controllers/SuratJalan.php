@@ -26,11 +26,14 @@ class SuratJalan extends Controller
             })
             ->orWhereDoesntHave('suratJalanDetails') // atau yang belum punya surat_jalan
             ->get();
+        $suratJalans = ModelsSuratJalan::filter(request()->only(['sj']))->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+        //dd($suratJalans);
         $data = [
             'selected' =>  'Surat Jalan',
             'page' => 'Surat Jalan',
             'title' => 'Surat Jalan',
-            'transaksis' => $transaksis
+            'transaksis' => $transaksis,
+            'suratJalans' => $suratJalans
         ];
         return view('gudang/suratjalan/index', $data);
     }
@@ -239,10 +242,7 @@ class SuratJalan extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.

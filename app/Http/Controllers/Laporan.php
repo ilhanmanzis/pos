@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\Diterima;
 use App\Exports\Margin;
 use App\Exports\MarginAll;
 use App\Exports\Pengeluaran;
@@ -18,6 +19,7 @@ use App\Models\Pengeluarans;
 use App\Models\Produks;
 use App\Models\Profile;
 use App\Models\Returs;
+use App\Models\SuratJalanDetails;
 use App\Models\TransaksiDetail;
 use App\Models\Transaksis;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -522,6 +524,39 @@ class Laporan extends Controller
     }
 
 
+    public function diterima(Request $request)
+    {
+        $request->validate(['kondisi' => 'required'], ['kondisi.required' => 'kondisi tidak boleh kosong']);
+
+        $kondisi = $request->input('kondisi');
+        $profile = Profile::first();
+
+        if ($kondisi === 'pending') {
+            $suratJalans = SuratJalanDetails::where('status', 'pending')->with(['transaksi.detail.stok.produk.kategori', 'suratJalan', 'transaksi.pelanggan'])->orderBy('created_at', 'desc')->get()->unique('kode_faktur');
+        } else {
+            $suratJalans = SuratJalanDetails::where('status', 'diambil')->with(['transaksi.detail.stok.produk.kategori', 'suratJalan', 'transaksi.pelanggan'])->orderBy('created_at', 'desc')->get()->unique('kode_faktur');
+        }
+        $action = $request->input('action');
+
+        $data = [
+            'suratJalans' => $suratJalans,
+            'profile' => $profile,
+            'logo' => public_path('storage/logo/' . $profile['logo']),
+            'kondisi' => $kondisi
+        ];
+        //dd($data);
+
+        if ($action === 'pdf') {
+            $pdf = Pdf::loadView('laporan/diterima', $data);
+            $pdf->setPaper('A4', 'portrait');
+            return $pdf->stream('laporan surat jalan ' .  ' -- ' . $this->waktu . '.pdf');
+        } else {
+            return Excel::download(
+                new Diterima($suratJalans, $profile),
+                'laporan surat jalan ' . ' -- ' . $this->waktu . '.xlsx'
+            );
+        }
+    }
 
 
 

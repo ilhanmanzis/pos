@@ -127,11 +127,7 @@ Route::middleware(['auth', 'role:gudang'])->prefix('gudang')->as('gudang.')->gro
     //surat jalan
     Route::get('/suratjalan', [SuratJalan::class, 'index'])->name('jalan');
     Route::get('/suratjalan/get/{id}', [SuratJalan::class, 'getTransaksi'])->name('jalan.getTransaksi');
-    Route::get('/suratjalan/create', [SuratJalan::class, 'create'])->name('jalan.create');
     Route::post('/suratjalan/store', [SuratJalan::class, 'store'])->name('jalan.store');
-    Route::get('/suratjalan/{id}', [SuratJalan::class, 'show'])->name('jalan.show');
-    Route::put('/suratjalan/update/{id}', [SuratJalan::class, 'update'])->name('jalan.update');
-    Route::delete('/suratjalan/store/{id}', [SuratJalan::class, 'destroy'])->name('jalan.delete');
     Route::get('/jalan/print-gabungan/{id}', [SuratJalan::class, 'printGabungan'])->name('jalan.printGabungan');
 });
 
@@ -162,6 +158,8 @@ Route::middleware(['auth', 'role:admin,finance,gudang'])->group(function () {
     Route::post('/laporan/margin', [Laporan::class, 'margin'])->name('laporan.margin');
     Route::get('/laporan/margin/pdf', [Laporan::class, 'marginPdf'])->name('laporan.margin.pdf');
     Route::get('/laporan/margin/excel', [Laporan::class, 'marginExcel'])->name('laporan.margin.excel');
+
+    Route::post('/laporan/diterima', [Laporan::class, 'diterima'])->name('laporan.diterima');
 });
 
 Route::get('/login', [Auth::class, 'index'])->middleware('guest')->name('login');

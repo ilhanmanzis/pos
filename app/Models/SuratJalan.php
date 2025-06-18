@@ -27,4 +27,12 @@ class SuratJalan extends Model
     {
         return $this->hasMany(SuratJalanDetails::class, 'id_surat_jalan', 'id_surat_jalan');
     }
+    public function scopeFilter($query, $filters)
+    {
+        if (isset($filters['sj']) && $filters['sj']) {
+            $query->where(function ($subQ) use ($filters) {
+                $subQ->where('nomor', 'like', '%' . $filters['sj'] . '%');
+            });
+        }
+    }
 }

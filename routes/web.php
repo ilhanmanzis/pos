@@ -74,8 +74,6 @@ Route::middleware(['auth', 'role:finance'])->prefix('finance')->as('finance.')->
     Route::get('/transaksi', [Transaksi::class, 'index'])->name('transaksi');
     Route::get('/transaksi/create', [Transaksi::class, 'create'])->name('transaksi.create');
     Route::post('/transaksi/store', [Transaksi::class, 'store'])->name('transaksi.store');
-    Route::get('/transaksi/{id}', [Transaksi::class, 'show'])->name('transaksi.show');
-    Route::put('/transaksi/update/{id}', [Transaksi::class, 'update'])->name('transaksi.update');
     Route::delete('/transaksi/store/{id}', [Transaksi::class, 'destroy'])->name('transaksi.delete');
     Route::get('/transaksi/pelanggan/{kode}', [Transaksi::class, 'getPelanggan']);
     Route::get('/transaksi/produk/{id}', [Transaksi::class, 'getDetail']);

@@ -16,10 +16,7 @@ class ProdukStok extends Model
     protected $fillable = [
         'size',
         'id_produk',
-        'jumlah_satuan',
-        'isi_persatuan',
-        'pcs',
-        'jumlah_pcs',
+        'jumlah',
         'harga_beli'
     ];
 

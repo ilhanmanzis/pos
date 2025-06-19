@@ -232,15 +232,12 @@
                                                                         class="text-gray-500 text-theme-sm dark:text-gray-400">
                                                                         @php
                                                                             $jumlah = 0;
-                                                                            $jumlahPcs = 0;
                                                                             foreach ($produk->stoks as $stok) {
-                                                                                $jumlah += $stok->jumlah_satuan;
-                                                                                $jumlahPcs += $stok->pcs;
+                                                                                $jumlah += $stok->jumlah;  
                                                                             }
                                                                         @endphp
                                                                         {{ $jumlah }}
                                                                         {{ $produk->satuan }}
-                                                                        {{ $jumlahPcs != 0 ? $jumlahPcs . ' pcs' : '' }}
                                                                     </p>
                                                                 </div>
                                                             </div>

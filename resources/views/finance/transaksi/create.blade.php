@@ -237,27 +237,6 @@
                                         readonly
                                         class="form-input bg-[#e6e7e8] shadow-theme-xs focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 border-gray-300 dark:border-gray-700">
                                 </div>
-                                {{-- <div>
-                                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                        Barang Sample?
-                                    </label>
-                                    <div class="flex items-center gap-4">
-                                        <label class="inline-flex items-center">
-                                            <input type="radio" x-model="produkDetail.sample" value="ya"
-                                                class="form-radio text-brand-500 dark:bg-gray-900 dark:border-gray-700">
-                                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Ya</span>
-                                        </label>
-                                        <label class="inline-flex items-center">
-                                            <input type="radio" x-model="produkDetail.sample" value="tidak"
-                                                class="form-radio text-brand-500 dark:bg-gray-900 dark:border-gray-700">
-                                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Tidak</span>
-                                        </label>
-                                    </div>
-                                </div> --}}
-
-
-
-
                                 <button type="button"
                                     class="mt-2 pt-5 text-sm bg-green-600 flex justify-center text-white rounded"
                                     @click="tambahKeKeranjang">
@@ -285,7 +264,6 @@
                                             <th class="border px-2 py-1">Jumlah</th>
                                             <th class="border px-2 py-1">Harga</th>
                                             <th class="border px-2 py-1">Total</th>
-                                            {{-- <th class="border px-2 py-1">Jenis</th> --}}
                                             <th class="border px-2 py-1">Aksi</th>
                                         </tr>
                                     </thead>
@@ -299,8 +277,6 @@
                                                 <td class="border px-2 py-1" x-text="item.harga_jual"></td>
                                                 <td class="border px-2 py-1" x-text="item.jumlah * item.harga_jual">
                                                 </td>
-                                                {{-- <td class="border px-2 py-1"
-                                                    x-text="item.sample === 'ya' ? 'sample' : 'biasa'"></td> --}}
                                                 <td class="border px-2 py-1">
                                                     <button type="button" class="text-blue-500 mr-2"
                                                         @click="editProduk(i)">Edit</button>
@@ -309,6 +285,15 @@
                                                 </td>
                                             </tr>
                                         </template>
+                                    </tbody>
+                                    <!-- Total Keranjang -->
+                                    <tbody>
+                                        <tr>
+                                            <td class="border px-2 py-1" colspan="5">Total Keranjang</td>
+                                            <td class="border px-2 py-1" colspan="2"
+                                                x-text="'Rp. '+keranjang.reduce((sum, item) => sum + (item.jumlah * item.harga_jual), 0)">
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -371,22 +356,13 @@
                                 fetch(`{{ url('/') }}/finance/transaksi/produk/${this.selectedProduk}`)
                                     .then(res => res.json())
                                     .then(data => {
-                                        const satuan = data.satuan;
-
-                                        let satuanOptions = [];
-                                        if (satuan.includes('roll')) {
-                                            satuanOptions = ['roll'];
-                                        } else {
-                                            satuanOptions = [satuan, 'pcs'];
-                                        }
-
                                         this.produkDetail = {
                                             id: data.id_produk,
                                             nama: data.nama_produk,
                                             size: data.sizes[0],
                                             allSizes: data.sizes,
-                                            satuan: satuanOptions,
-                                            selectedSatuan: satuanOptions[0],
+                                            satuan: [data.satuan],
+                                            selectedSatuan: [data.satuan][0],
                                             jumlah: 1,
                                             harga_jual: 0,
                                             stokData: data.stok_per_size,

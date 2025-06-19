@@ -15,10 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id_stok');
             $table->unsignedBigInteger('id_produk');
             $table->string('size');
-            $table->integer('jumlah_satuan')->nullable();
-            $table->integer('isi_persatuan')->nullable();
-            $table->integer('pcs')->nullable();
-            $table->integer('jumlah_pcs')->nullable();
+            $table->integer('jumlah')->nullable();
             $table->integer('harga_beli')->nullable();
             $table->timestamps();
 

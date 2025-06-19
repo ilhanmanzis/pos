@@ -108,7 +108,6 @@ class SuratJalan extends Controller
             'jam' => now(),
             'nomor' => $nomorJalan
         ]);
-
         foreach ($keranjang as $item) {
             $idTransaksi = $item['id_transaksi'];
 
@@ -122,50 +121,43 @@ class SuratJalan extends Controller
                 ]);
                 continue; // Lewatkan pembuatan ulang surat jalan
             }
-
             // Cek stok cukup
             $transaksiDetails = TransaksiDetail::where('id_transaksi', $idTransaksi)->get();
 
+            foreach ($transaksiDetails as $detail) {
+                $produkStok = ProdukStok::with('produk')->find($detail->id_stok);
+                $qty = $detail->qty;
+                $satuan = $detail->satuan;
+                // Satuan besar: box, pack, dll
+                if ($produkStok->jumlah < $qty) {
+                    ModelsSuratJalan::where('id_surat_jalan', $suratJalan['id_surat_jalan'])->delete();
+                    return back()->with([
+                        'error' => "Stok produk {$produkStok->produk->name}  dengan size {$produkStok->size}  tidak cukup untuk {$qty} {$satuan}"
+                    ]);
+                }
+            }
+        }
+
+        foreach ($keranjang as $item) {
+            $idTransaksi = $item['id_transaksi'];
+            // Cek apakah surat jalan sudah ada untuk kode faktur ini
+            $existingSuratJalan = SuratJalanDetails::where('kode_faktur', $item['kode_faktur'])->first();
+
+            if ($existingSuratJalan) {
+                continue; // Lewatkan pembuatan ulang surat jalan
+            }
+
+            // Cek stok cukup
+            $transaksiDetails = TransaksiDetail::where('id_transaksi', $idTransaksi)->get();
 
             // Kurangi stok
             foreach ($transaksiDetails as $detail) {
                 $produkStok = ProdukStok::with('produk')->find($detail->id_stok);
 
                 $qty = $detail->qty;
-                $satuan = $detail->satuan; // bisa 'pcs' atau satuan besar (box, pack, dll)
-                $isiPerSatuan = $produkStok->isi_persatuan;
 
-                if ($satuan === 'pcs') {
-                    if ($produkStok->pcs >= $qty) {
-                        $produkStok->pcs -= $qty;
-                    } else {
-                        $sisaPcs = $qty - $produkStok->pcs;
-                        $produkStok->pcs = 0;
+                $produkStok->jumlah -= $qty;
 
-                        $jumlahSatuanTerpakai = (int) ceil($sisaPcs / $isiPerSatuan);
-
-                        if ($produkStok->jumlah_satuan < $jumlahSatuanTerpakai) {
-                            return back()->with([
-                                'error' => "Stok produk {$produkStok->produk->name} dengan size {$produkStok->size} tidak cukup. Butuh tambahan $jumlahSatuanTerpakai {$satuan}"
-                            ]);
-                        }
-
-                        $produkStok->jumlah_satuan -= $jumlahSatuanTerpakai;
-                        $produkStok->pcs = ($jumlahSatuanTerpakai * $isiPerSatuan) - $sisaPcs;
-                    }
-
-                    $produkStok->jumlah_pcs -= $qty;
-                } else {
-                    // Satuan besar: box, pack, dll
-                    if ($produkStok->jumlah_satuan < $qty) {
-                        return back()->with([
-                            'error' => "Stok produk {$produkStok->produk->name}  dengan size {$produkStok->size}  tidak cukup untuk {$qty} {$satuan}"
-                        ]);
-                    }
-
-                    $produkStok->jumlah_satuan -= $qty;
-                    $produkStok->jumlah_pcs -= $qty * $isiPerSatuan;
-                }
 
                 $produkStok->save();
             }
@@ -242,7 +234,9 @@ class SuratJalan extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {}
+    public function show(string $id)
+    {
+    }
 
     /**
      * Show the form for editing the specified resource.

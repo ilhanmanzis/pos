@@ -80,10 +80,8 @@ class Produk extends Controller
             'size.*' => 'required|string|max:50',
             'harga_beli' => 'required|array',
             'harga_beli.*' => 'required|numeric|min:0',
-            'jumlah_satuan' => 'required|array',
-            'jumlah_satuan.*' => 'required|integer|min:1',
-            'isi_persatuan' => 'array',
-            'isi_persatuan.*' => 'integer|min:0',
+            'jumlah' => 'required|array',
+            'jumlah.*' => 'required|integer|min:1',
         ], [
             'name.required' => 'nama tidak boleh kosong',
             'merk.required' => 'merk tidak boleh kosong',
@@ -105,14 +103,8 @@ class Produk extends Controller
             // Simpan nama file ke database
             $foto = time() . $uuidName;
         }
-        $satuan = null;
-        if ($request->input('satuan') === 'box/pcs') {
-            $satuan = 'box';
-        } elseif ($request->input('satuan') === 'roll') {
-            $satuan = 'roll';
-        } else {
-            $satuan = 'pack';
-        }
+        
+        //tambah data ke tabel produks
         $produk = Produks::create(
             [
                 'id_kategori' => $request->input('kategori'),
@@ -121,23 +113,16 @@ class Produk extends Controller
                 'merk' => $request->input('merk'),
                 'keterangan' => $request->input('keterangan'),
                 'foto' => $foto,
-                'satuan' => $satuan,
+                'satuan' => $request->input('satuan'),
             ]
         );
 
+        // tambah data ke tabel produk_stoks
         foreach ($request->input('size') as $i => $sizeName) {
-
-            $jumlahSatuan = $request->input('jumlah_satuan')[$i];
-            $isiPersatuan = $request->input('isi_persatuan')[$i] ?? null;
-            $jumlahPcs = $jumlahSatuan * $isiPersatuan;
-
             ProdukStok::create([
                 'size' => $sizeName,
                 'id_produk' => $produk->id_produk,
-                'jumlah_satuan' => $jumlahSatuan,
-                'isi_persatuan' => $isiPersatuan,
-                'pcs' => null,
-                'jumlah_pcs' => $jumlahPcs,
+                'jumlah' => $request->input('jumlah')[$i],
                 'harga_beli' => $request->input('harga_beli')[$i],
             ]);
         }
@@ -196,22 +181,22 @@ class Produk extends Controller
     public function editStok(Request $request, string $id)
     {
         $request->validate([
-            'jumlah_satuan' => 'required|array',
-            'jumlah_satuan.*' => 'required|integer|min:0',
+            'jumlah' => 'required|array',
+            'jumlah.*' => 'required|integer|min:0',
         ]);
 
 
-        $jumlahSatuans = $request->jumlah_satuan;
+        $jumlah = $request->jumlah;
         $stokIds = $request->id_stok;
 
         foreach ($stokIds as $index => $id) {
             $existingStok = ProdukStok::find($id);
 
             if ($existingStok) {
-                $stokBaru = $existingStok->jumlah_satuan + $jumlahSatuans[$index];
+                $stokBaru = $existingStok->jumlah + $jumlah[$index];
 
                 $existingStok->update([
-                    'jumlah_satuan' => $stokBaru,
+                    'jumlah' => $stokBaru,
                 ]);
             }
         }
@@ -232,10 +217,8 @@ class Produk extends Controller
             'size.*' => 'required|string|max:50',
             'harga_beli' => 'required|array',
             'harga_beli.*' => 'required|numeric|min:0',
-            'jumlah_satuan' => 'required|array',
-            'jumlah_satuan.*' => 'required|integer|min:1',
-            'isi_persatuan' => 'array',
-            'isi_persatuan.*' => 'integer|min:0',
+            'jumlah' => 'required|array',
+            'jumlah.*' => 'required|integer|min:1',
         ], [
             'name.required' => 'nama tidak boleh kosong',
             'merk.required' => 'merk tidak boleh kosong',
@@ -261,14 +244,6 @@ class Produk extends Controller
         } else {
             $foto = $produk['foto'];
         }
-        $satuan = null;
-        if ($request->input('satuan') === 'box/pcs') {
-            $satuan = 'box';
-        } elseif ($request->input('satuan') === 'roll') {
-            $satuan = 'roll';
-        } else {
-            $satuan = 'pack';
-        }
         $produk->update([
             'id_kategori' => $request->input('kategori'),
             'kode' => $request->input('kode'),
@@ -276,7 +251,7 @@ class Produk extends Controller
             'merk' => $request->input('merk'),
             'keterangan' => $request->input('keterangan'),
             'foto' => $foto,
-            'satuan' => $satuan,
+            'satuan' => $request->input('satuan'),
         ]);
 
         // Ambil semua ID stok lama untuk produk ini
@@ -293,8 +268,7 @@ class Produk extends Controller
         // Update atau Tambah stok baru
         $sizes = $request->size;
         $hargaBelis = $request->harga_beli;
-        $jumlahSatuans = $request->jumlah_satuan;
-        $isiPerSatuans = $request->isi_persatuan;
+        $jumlah = $request->jumlah;
         $stokIds = $request->id_stok;
 
         foreach ($sizes as $index => $size) {
@@ -302,8 +276,7 @@ class Produk extends Controller
                 'id_produk' => $produk->id_produk,
                 'size' => $size,
                 'harga_beli' => $hargaBelis[$index],
-                'jumlah_satuan' => $jumlahSatuans[$index],
-                'isi_persatuan' => $isiPerSatuans[$index] ?? null,
+                'jumlah' => $jumlah[$index],
             ];
 
             // Jika stok ID disediakan, update; jika tidak, buat baru

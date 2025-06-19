@@ -64,15 +64,15 @@
                                 sizes: [{
                                     size: '',
                                     harga_beli: '',
-                                    jumlah_satuan: '',
-                                    isi_persatuan: ''
+                                    jumlah: '',
+                                    
                                 }],
                                 addSize() {
                                     this.sizes.push({
                                         size: '',
                                         harga_beli: '',
-                                        jumlah_satuan: '',
-                                        isi_persatuan: ''
+                                        jumlah: '',
+                                        
                                     });
                                 },
                                 removeSize(index) {
@@ -84,7 +84,7 @@
                                         return [
                                             'id_stok' => $stok->id_stok,
                                             'size' => $stok->size,
-                                            'jumlah_satuan' => 0,
+                                            'jumlah' => 0,
                                         ];
                                     }),
                                 ) }}">
@@ -101,7 +101,7 @@
                                                 class="form-input bg-[#e6e7e8] shadow-theme-xs focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 border-gray-300 dark:border-gray-700">
                                         </td>
                                         <td class="px-5 py-4 sm:px-6">
-                                            <input type="number" name="jumlah_satuan[]" x-model="row.jumlah_satuan"
+                                            <input type="number" name="jumlah[]" x-model="row.jumlah"
                                                 class="dark:bg-dark-900 shadow-theme-xs  w-full focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 rounded-lg border  bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 border-gray-300 dark:border-gray-700"
                                                 required>
                                         </td>

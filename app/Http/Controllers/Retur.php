@@ -138,8 +138,8 @@ class Retur extends Controller
     {
         $retur = Returs::with(['details', 'details.produk'])->find($id);
         $data = [
-            'selected' =>  'Produk',
-            'page' => 'Produk',
+            'selected' =>  'Retur',
+            'page' => 'Retur',
             'title' => $retur->details[0]->produk->name,
             'retur' => $retur
         ];

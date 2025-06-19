@@ -166,21 +166,21 @@
 
                             <!-- Radio Buttons -->
                             <div class="flex flex-wrap items-center gap-8">
-                                <!-- Box/Pcs -->
-                                <label for="radioBoxPcs"
+                                <!-- Box -->
+                                <label for="radioBox"
                                     class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
                                     <div class="relative">
-                                        <input type="radio" id="radioBoxPcs" name="satuan" value="box/pcs"
+                                        <input type="radio" id="radioBox" name="satuan" value="box"
                                             class="sr-only" x-model="selectedSatuan" required />
-                                        <div :class="selectedSatuan === 'box/pcs' ? 'border-brand-500 bg-brand-500' :
+                                        <div :class="selectedSatuan === 'box' ? 'border-brand-500 bg-brand-500' :
                                             'bg-transparent border-gray-300 dark:border-gray-700'"
                                             class="hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-full border-[1.25px]">
                                             <span class="h-2 w-2 rounded-full"
-                                                :class="selectedSatuan === 'box/pcs' ? 'bg-white' :
+                                                :class="selectedSatuan === 'box' ? 'bg-white' :
                                                     'bg-white dark:bg-[#171f2e]'"></span>
                                         </div>
                                     </div>
-                                    Box/Pcs
+                                    Box
                                 </label>
 
                                 <!-- Roll -->
@@ -200,21 +200,38 @@
                                     Roll
                                 </label>
 
-                                <!-- Pack/Pcs -->
-                                <label for="radioPackPcs"
+                                <!-- Pack -->
+                                <label for="radioPack"
                                     class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
                                     <div class="relative">
-                                        <input type="radio" id="radioPackPcs" name="satuan" value="pack/pcs"
+                                        <input type="radio" id="radioPack" name="satuan" value="pack"
                                             class="sr-only" x-model="selectedSatuan" />
-                                        <div :class="selectedSatuan === 'pack/pcs' ? 'border-brand-500 bg-brand-500' :
+                                        <div :class="selectedSatuan === 'pack' ? 'border-brand-500 bg-brand-500' :
                                             'bg-transparent border-gray-300 dark:border-gray-700'"
                                             class="hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-full border-[1.25px]">
                                             <span class="h-2 w-2 rounded-full"
-                                                :class="selectedSatuan === 'pack/pcs' ? 'bg-white' :
+                                                :class="selectedSatuan === 'pack' ? 'bg-white' :
                                                     'bg-white dark:bg-[#171f2e]'"></span>
                                         </div>
                                     </div>
-                                    Pack/Pcs
+                                    Pack
+                                </label>
+
+                                <!-- Pcs -->
+                                <label for="radioPcs"
+                                    class="flex cursor-pointer items-center text-sm font-medium text-gray-700 select-none dark:text-gray-400">
+                                    <div class="relative">
+                                        <input type="radio" id="radioPcs" name="satuan" value="pcs"
+                                            class="sr-only" x-model="selectedSatuan" />
+                                        <div :class="selectedSatuan === 'pcs' ? 'border-brand-500 bg-brand-500' :
+                                            'bg-transparent border-gray-300 dark:border-gray-700'"
+                                            class="hover:border-brand-500 dark:hover:border-brand-500 mr-3 flex h-5 w-5 items-center justify-center rounded-full border-[1.25px]">
+                                            <span class="h-2 w-2 rounded-full"
+                                                :class="selectedSatuan === 'pcs' ? 'bg-white' :
+                                                    'bg-white dark:bg-[#171f2e]'"></span>
+                                        </div>
+                                    </div>
+                                    Pcs
                                 </label>
                             </div>
                             @error('satuan')
@@ -225,20 +242,18 @@
                         </div>
                         <!-- Div ini akan berubah sesuai pilihan -->
                         <div id="isiSatuan" class="mt-4 w-full">
-                            <template x-if="selectedSatuan === 'box/pcs'">
+                            <template x-if="selectedSatuan === 'box'">
                                 <div x-data="{
                                     sizes: [{
                                         size: '',
                                         harga_beli: '',
-                                        jumlah_satuan: '',
-                                        isi_persatuan: ''
+                                        jumlah: '',
                                     }],
                                     addSize() {
                                         this.sizes.push({
                                             size: '',
                                             harga_beli: '',
-                                            jumlah_satuan: '',
-                                            isi_persatuan: ''
+                                            jumlah: '',
                                         });
                                     },
                                     removeSize(index) {
@@ -277,18 +292,11 @@
                                                     <div class="flex items-center justify-center">
                                                         <p
                                                             class="font-medium text-gray-500  text-theme-xs dark:text-gray-400">
-                                                            Jumlah Box
+                                                            Jumlah
                                                         </p>
                                                     </div>
                                                 </th>
-                                                <th class="px-5 py-3 sm:px-6">
-                                                    <div class="flex items-center justify-center">
-                                                        <p
-                                                            class="font-medium text-gray-500  text-theme-xs dark:text-gray-400">
-                                                            Jumlah Pcs / Box
-                                                        </p>
-                                                    </div>
-                                                </th>
+                                                
                                                 <th class="px-5 py-3 sm:px-6">
                                                     <div class="flex items-center justify-center">
                                                         <p
@@ -309,7 +317,7 @@
                                                             required>
                                                     </td>
                                                     <td class="px-5 py-4 sm:px-6">
-                                                        <input type="text" value="Box/Pcs" readonly disabled
+                                                        <input type="text" value="Box" readonly disabled
                                                             class="form-input bg-[#e6e7e8] shadow-theme-xs focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 border-gray-300 dark:border-gray-700">
                                                     </td>
                                                     <td class="px-5 py-4 sm:px-6">
@@ -319,17 +327,12 @@
                                                             required>
                                                     </td>
                                                     <td class="px-5 py-4 sm:px-6">
-                                                        <input type="number" name="jumlah_satuan[]"
-                                                            x-model="row.jumlah_satuan"
+                                                        <input type="number" name="jumlah[]"
+                                                            x-model="row.jumlah"
                                                             class="dark:bg-dark-900 shadow-theme-xs  w-full focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 rounded-lg border  bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 "
                                                             required>
                                                     </td>
-                                                    <td class="px-5 py-4 sm:px-6">
-                                                        <input type="number" name="isi_persatuan[]"
-                                                            x-model="row.isi_persatuan"
-                                                            class="dark:bg-dark-900 shadow-theme-xs  w-full focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 rounded-lg border  bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 "
-                                                            required>
-                                                    </td>
+                                                    
                                                     <td class="px-5 py-4 sm:px-6 text-center">
                                                         <button type="button" @click="removeSize(index)"
                                                             class="bg-red-500 text-white rounded px-2 py-1 text-sm hover:bg-red-600"
@@ -360,14 +363,14 @@
                                     sizes: [{
                                         size: '',
                                         harga_beli: '',
-                                        jumlah_satuan: '',
+                                        jumlah: '',
                                 
                                     }],
                                     addSize() {
                                         this.sizes.push({
                                             size: '',
                                             harga_beli: '',
-                                            jumlah_satuan: '',
+                                            jumlah: '',
                                 
                                         });
                                     },
@@ -442,8 +445,8 @@
                                                             required>
                                                     </td>
                                                     <td class="px-5 py-4 sm:px-6">
-                                                        <input type="number" name="jumlah_satuan[]"
-                                                            x-model="row.jumlah_satuan"
+                                                        <input type="number" name="jumlah[]"
+                                                            x-model="row.jumlah"
                                                             class="dark:bg-dark-900 shadow-theme-xs  w-full focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 rounded-lg border  bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 "
                                                             required>
                                                     </td>
@@ -471,21 +474,19 @@
                                     </div>
                                 </div>
                             </template>
-                            <!-- Pack/Pcs -->
-                            <template x-if="selectedSatuan === 'pack/pcs'">
+                            <!-- Pack-->
+                            <template x-if="selectedSatuan === 'pack'">
                                 <div x-data="{
                                     sizes: [{
                                         size: '',
                                         harga_beli: '',
-                                        jumlah_satuan: '',
-                                        isi_persatuan: ''
+                                        jumlah: '',
                                     }],
                                     addSize() {
                                         this.sizes.push({
                                             size: '',
                                             harga_beli: '',
-                                            jumlah_satuan: '',
-                                            isi_persatuan: ''
+                                            jumlah: '',
                                         });
                                     },
                                     removeSize(index) {
@@ -524,15 +525,7 @@
                                                     <div class="flex items-center justify-center">
                                                         <p
                                                             class="font-medium text-gray-500  text-theme-xs dark:text-gray-400">
-                                                            Jumlah Pack
-                                                        </p>
-                                                    </div>
-                                                </th>
-                                                <th class="px-5 py-3 sm:px-6">
-                                                    <div class="flex items-center justify-center">
-                                                        <p
-                                                            class="font-medium text-gray-500  text-theme-xs dark:text-gray-400">
-                                                            Jumlah Pcs / Pack
+                                                            Jumlah
                                                         </p>
                                                     </div>
                                                 </th>
@@ -556,7 +549,7 @@
                                                             required>
                                                     </td>
                                                     <td class="px-5 py-4 sm:px-6">
-                                                        <input type="text" value="Pack/Pcs" readonly disabled
+                                                        <input type="text" value="Pack" readonly disabled
                                                             class="form-input bg-[#e6e7e8] shadow-theme-xs focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 border-gray-300 dark:border-gray-700">
                                                     </td>
                                                     <td class="px-5 py-4 sm:px-6">
@@ -566,14 +559,121 @@
                                                             required>
                                                     </td>
                                                     <td class="px-5 py-4 sm:px-6">
-                                                        <input type="number" name="jumlah_satuan[]"
-                                                            x-model="row.jumlah_satuan"
+                                                        <input type="number" name="jumlah[]"
+                                                            x-model="row.jumlah"
+                                                            class="dark:bg-dark-900 shadow-theme-xs  w-full focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 rounded-lg border  bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 "
+                                                            required>
+                                                    </td>
+                                                    <td class="px-5 py-4 sm:px-6 text-center">
+                                                        <button type="button" @click="removeSize(index)"
+                                                            class="bg-red-500 text-white rounded px-2 py-1 text-sm hover:bg-red-600"
+                                                            x-show="sizes.length > 1"><svg
+                                                                xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                viewBox="0 0 24 24" stroke-width="1.5"
+                                                                stroke="currentColor" class="size-6">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                            </svg></button>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                    <!-- Tombol Tambah -->
+                                    <div class="mt-3 mx-6">
+                                        <button type="button" @click="addSize()"
+                                            class="bg-green-500 text-white rounded px-4 py-2 text-sm hover:bg-green-600">+
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                            <!-- Pcs-->
+                            <template x-if="selectedSatuan === 'pcs'">
+                                <div x-data="{
+                                    sizes: [{
+                                        size: '',
+                                        harga_beli: '',
+                                        jumlah: '',
+                                    }],
+                                    addSize() {
+                                        this.sizes.push({
+                                            size: '',
+                                            harga_beli: '',
+                                            jumlah: '',
+                                        });
+                                    },
+                                    removeSize(index) {
+                                        this.sizes.splice(index, 1);
+                                    }
+                                }">
+                                    <table class="w-full">
+                                        <thead>
+                                            <tr class="border-b border-gray-100 dark:border-gray-800">
+                                            <tr class="border-b border-gray-100 dark:border-gray-800">
+                                                <th class="px-5 py-3 sm:px-6">
+                                                    <div class="flex items-center justify-center">
+                                                        <p
+                                                            class="font-medium text-gray-500  text-theme-xs dark:text-gray-400">
+                                                            Size
+                                                        </p>
+                                                    </div>
+                                                </th>
+                                                <th class="px-5 py-3 sm:px-6">
+                                                    <div class="flex items-center justify-center">
+                                                        <p
+                                                            class="font-medium text-gray-500  text-theme-xs dark:text-gray-400">
+                                                            Satuan
+                                                        </p>
+                                                    </div>
+                                                </th>
+                                                <th class="px-5 py-3 sm:px-6">
+                                                    <div class="flex items-center justify-center">
+                                                        <p
+                                                            class="font-medium text-gray-500  text-theme-xs dark:text-gray-400">
+                                                            Harga Beli
+                                                        </p>
+                                                    </div>
+                                                </th>
+                                                <th class="px-5 py-3 sm:px-6">
+                                                    <div class="flex items-center justify-center">
+                                                        <p
+                                                            class="font-medium text-gray-500  text-theme-xs dark:text-gray-400">
+                                                            Jumlah
+                                                        </p>
+                                                    </div>
+                                                </th>
+                                                <th class="px-5 py-3 sm:px-6">
+                                                    <div class="flex items-center justify-center">
+                                                        <p
+                                                            class="font-medium text-gray-500  text-theme-xs dark:text-gray-400">
+                                                            Aksi
+                                                        </p>
+                                                    </div>
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template x-for="(row, index) in sizes" :key="index">
+                                                <tr>
+                                                    <td class="px-5 py-4 sm:px-6">
+                                                        <input type="text" name="size[]" x-model="row.size"
                                                             class="dark:bg-dark-900 shadow-theme-xs  w-full focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 rounded-lg border  bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 "
                                                             required>
                                                     </td>
                                                     <td class="px-5 py-4 sm:px-6">
-                                                        <input type="number" name="isi_persatuan[]"
-                                                            x-model="row.isi_persatuan"
+                                                        <input type="text" value="Pcs" readonly disabled
+                                                            class="form-input bg-[#e6e7e8] shadow-theme-xs focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 border-gray-300 dark:border-gray-700">
+                                                    </td>
+                                                    <td class="px-5 py-4 sm:px-6">
+                                                        <input type="number" name="harga_beli[]"
+                                                            x-model="row.harga_beli"
+                                                            class="dark:bg-dark-900 shadow-theme-xs  w-full focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 rounded-lg border  bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 "
+                                                            required>
+                                                    </td>
+                                                    <td class="px-5 py-4 sm:px-6">
+                                                        <input type="number" name="jumlah[]"
+                                                            x-model="row.jumlah"
                                                             class="dark:bg-dark-900 shadow-theme-xs  w-full focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 rounded-lg border  bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 "
                                                             required>
                                                     </td>

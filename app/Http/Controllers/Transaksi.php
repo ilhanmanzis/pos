@@ -62,10 +62,9 @@ class Transaksi extends Controller
             return [
                 'id_stok' => $stok->id_stok,
                 'size' => $stok->size,
-                'jumlah_satuan' => $stok->jumlah_satuan,
+                'jumlah' => $stok->jumlah,
                 'pcs' => $stok->pcs,
-                'display' => $stok->jumlah_satuan . ' ' . $produk->satuan .
-                    ($stok->pcs > 0 ? ' (' . $stok->pcs . ' pcs)' : ''),
+                'display' => $stok->jumlah . ' ' . $produk->satuan
             ];
         });
 
@@ -73,7 +72,7 @@ class Transaksi extends Controller
             'id_produk' => $produk->id_produk,
             'nama_produk' => $produk->name,
             'sizes' => $sizes,
-            'satuan' => $produk->satuan, // array ["box", "pack"] dsb
+            'satuan' => $produk->satuan,
             'harga_jual' => $produk->harga_jual,
             'stok_per_size' => $stokDetail,
         ]);

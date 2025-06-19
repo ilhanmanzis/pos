@@ -19,7 +19,7 @@ class SuratJalan extends Controller
      */
     public function index()
     {
-        $transaksis = Transaksis::with('pelanggan', 'detail', 'suratJalanDetails') // pastikan relasi 'suratJalan' ada di model Transaksis
+        $transaksis = Transaksis::with('pelanggan', 'detail', 'suratJalanDetails')
             ->whereHas('suratJalanDetails', function ($query) {
                 // Cari yang statusnya bukan 'diambil'
                 $query->where('status', '!=', 'diambil');
